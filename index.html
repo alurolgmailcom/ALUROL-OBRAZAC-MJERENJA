@@ -249,6 +249,7 @@
       <div class="actions">
         <button type="button" class="primary" onclick="copyReport()">Kopiraj izvještaj</button>
         <button type="button" class="secondary" onclick="shareReport()">Podijeli / pošalji</button>
+       <button type="button" class="primary" onclick="sendToAlurol()">Pošalji u ALUROL</button>
         <button type="button" class="light" onclick="saveDraft()">Sačuvaj nacrt</button>
         <button type="button" class="light" onclick="downloadFullForm()">Sačuvaj obrazac + slike</button>
         <button type="button" class="danger" onclick="clearForm()">Očisti</button>
@@ -258,7 +259,70 @@
     <div id="output" class="output"></div>
     <div class="footer-note">ALUROL doo – obrazac za mjerenje na terenu</div>
   </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://zevvkjwnedtgeabnsfcd.supabase.co";
+const SUPABASE_KEY ="sb_publishable_fgTbRdIIS4nvLJUGI-BF9Q_7Y6qk6lR";
 
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function sendToAlurol() {
+const val = (id) => document.getElementById(id)?.value?.trim() || "";
+
+
+    if (!val("kupac") || !val("telefon")) {
+      alert("Popuni obavezno kupca i telefon.");
+      return;
+    }
+
+    const payload = {
+      datum_mjerenja: val("datum"),
+      radnik: val("radnik"),
+      kupac: val("kupac"),
+      telefon: val("telefon"),
+      mjesto: val("mjesto"),
+      adresa: val("adresa"),
+
+      tip_proizvoda: val("tip"),
+      boja: val("boja"),
+      motor: val("motor"),
+      struja: val("struja"),
+      demontaza: val("demontaza"),
+
+      sirina: val("sirina"),
+      visina: val("visina"),
+
+      sirina_lijevog_krila: val("sirina"),
+      sirina_desnog_krila: val("visina"),
+      duzina_kapije: val("sirina"),
+
+      nadvoj: val("nadvoj"),
+      lijevi_spalet: val("lijevi"),
+      desni_spalet: val("desni"),
+      dubina_prostora: val("dubina"),
+      visina_plafona: val("plafon"),
+
+      mjera_a: val("mjeraA"),
+      mjera_b: val("mjeraB"),
+      mjera_c: val("mjeraC"),
+
+      napomena: val("napomena"),
+      slike: window.savedPhotos || []
+    };
+
+    const { error } = await supabaseClient
+      .from("measurements")
+      .insert([payload]);
+
+    if (error) {
+      alert("Greška kod slanja u ALUROL: " + error.message);
+      console.error(error);
+      return;
+    }
+
+    alert("Mjerenje je poslano u ALUROL arhivu.");
+  }
+</script>
 <script>
   const ids = ["datum","radnik","kupac","telefon","mjesto","adresa","tip","boja","motor","struja","demontaza","pristup","krilnaSmjer","krilnaUgao","krilnaA","krilnaB","krilnaC","sirina","visina","nadvoj","lijevi","desni","dubina","plafon","napomena","chkPod","chkZid","chkPrepreke","chkSlike"];
   const draftKey = "alurol_mjerenje_draft_v3_photos";
