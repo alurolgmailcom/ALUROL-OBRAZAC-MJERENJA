@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="bs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ALUROL – Obrazac za mjerenje</title>
+  <style>
+    :root{
+      --bg:#f4f5f7;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#d7dce2;
+      --soft:#f9fafb;
+      --primary:#f97316;
+      --primary-dark:#ea580c;
+      --dark:#111827;
+      --danger:#dc2626;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);padding:12px}
+    .wrap{max-width:920px;margin:0 auto 90px}
+    .header{background:linear-gradient(135deg,#111827,#374151);color:#fff;border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+    .brand{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .brand h1{margin:0;font-size:22px;letter-spacing:.3px}
+    .badge{background:var(--primary);color:#fff;font-weight:700;border-radius:999px;padding:7px 12px;font-size:13px;white-space:nowrap}
+    .sub{color:#e5e7eb;margin-top:8px;font-size:14px;line-height:1.35}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+    .section-title{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:9px}
+    .num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#ffedd5;color:#9a3412;font-weight:800;font-size:13px}
+    label{display:block;font-weight:700;margin-top:10px;margin-bottom:5px;font-size:13px;color:#111827}
+    .req::after{content:" *";color:var(--danger)}
+    input,select,textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 12px;font-size:16px;background:#fff;color:var(--text)}
+    input:focus,select:focus,textarea:focus{outline:2px solid #fed7aa;border-color:var(--primary)}
+    textarea{min-height:105px;resize:vertical}
+    .grid{display:grid;grid-template-columns:1fr;gap:0 12px}
+    .grid.two,.grid.three{grid-template-columns:1fr}
+    @media(min-width:720px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:1fr 1fr 1fr}}
+    .measure-box{background:var(--soft);border:1px dashed var(--border);border-radius:12px;padding:10px;margin-top:8px}
+    .hint{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.35}
+    .checks{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
+    @media(min-width:720px){.checks{grid-template-columns:1fr 1fr}}
+    .check{display:flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--border);border-radius:10px;padding:9px}
+    .check input{width:auto;margin:0}
+    .check label{margin:0;font-weight:600;font-size:14px}
+    .actions{position:fixed;left:0;right:0;bottom:0;background:rgba(244,245,247,.97);border-top:1px solid var(--border);padding:10px 12px;display:grid;gap:8px;grid-template-columns:1fr 1fr;z-index:10}
+    @media(min-width:720px){.actions{left:50%;transform:translateX(-50%);max-width:920px;border:1px solid var(--border);border-bottom:0;border-radius:16px 16px 0 0;grid-template-columns:1.2fr 1.2fr 1fr 1fr}}
+    button{border:0;border-radius:12px;padding:13px 12px;font-size:15px;font-weight:800;cursor:pointer}
+    .primary{background:var(--primary);color:#fff}.primary:active{background:var(--primary-dark)}
+    .secondary{background:var(--dark);color:#fff}.light{background:#e5e7eb;color:#111827}.danger{background:#fee2e2;color:#991b1b}
+    .output{white-space:pre-wrap;background:#111827;color:#f9fafb;padding:12px;border-radius:12px;font-family:Arial,sans-serif;font-size:14px;margin-top:10px;display:none}
+    .footer-note{font-size:12px;color:var(--muted);text-align:center;margin:14px 0}
+
+    .photo-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+    @media(min-width:720px){.photo-actions{grid-template-columns:1fr 1fr}}
+    .photo-preview{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    @media(min-width:720px){.photo-preview{grid-template-columns:repeat(4,1fr)}}
+    .photo-card{border:1px solid var(--border);border-radius:12px;background:var(--soft);padding:6px}
+    .photo-card img{width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--border);background:#fff}
+    .photo-card .photo-name{font-size:11px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .photo-card button{width:100%;margin-top:5px;padding:8px;font-size:12px;border-radius:8px}
+    @media print{body{background:#fff;padding:0}.wrap{max-width:none;margin:0}.header,.card{box-shadow:none;border-radius:0;margin-bottom:6px}.actions,.output{display:none!important}input,select,textarea{border:1px solid #999;padding:6px;font-size:12px}label{font-size:11px;margin-top:6px}.section-title{font-size:13px;margin-bottom:6px;padding-bottom:5px}.card{padding:8px}.header{padding:10px;color:#000;background:#fff;border:1px solid #999}.sub{color:#333}textarea{min-height:60px}.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:1fr 1fr 1fr}}
+
+    .gate-extra{display:none;}
+    .kapija-hide.hidden-for-kapija{display:none!important;}
+    .gate-extra.show{display:block;}
+    .gate-diagrams{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px;}
+    @media (min-width:700px){.gate-diagrams{grid-template-columns:1fr 1fr;}}
+    .gate-diagram{border:1px solid var(--border);border-radius:12px;background:#fff;padding:10px;}
+    .gate-diagram-title{font-weight:800;text-align:center;margin-bottom:8px;font-size:13px;color:#111827;}
+    .gate-diagram svg{width:100%;height:auto;display:block;border-radius:8px;background:#f9fafb;}
+    .gate-measures{margin-top:12px;border-top:1px solid var(--border);padding-top:10px;}
+    .gate-note{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.35;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="brand">
+        <h1>ALUROL – OBRAZAC ZA MJERENJE</h1>
+        <div class="badge">TEREN / MOBILNI UNOS</div>
+      </div>
+      <div class="sub">Popuni na telefonu. Na kraju klikni “Kopiraj izvještaj” ili “Podijeli / pošalji”. Fotografije možeš uslikati i sačuvati zajedno sa obrascem.</div>
+    </div>
+
+    <form id="measurementForm">
+      <div class="card">
+        <div class="section-title"><span class="num">1</span> Podaci kupca</div>
+        <div class="grid two">
+          <div><label>Datum mjerenja</label><input id="datum" type="date"></div>
+          <div><label>Radnik koji je mjerio</label><input id="radnik" type="text" value="Mijatović Draško" placeholder="Ime radnika"></div>
+        </div>
+        <label class="req">Kupac / firma</label><input id="kupac" type="text" placeholder="Ime kupca ili firma" required>
+        <div class="grid two">
+          <div><label class="req">Telefon</label><input id="telefon" type="tel" placeholder="065/000-000" required></div>
+          <div><label>Mjesto</label><input id="mjesto" type="text" placeholder="Banja Luka"></div>
+        </div>
+        <label>Adresa mjerenja</label><input id="adresa" type="text" placeholder="Ulica i broj">
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span class="num">2</span> Proizvod i oprema</div>
+        <label class="req">Tip proizvoda</label>
+        <select id="tip" required>
+          <option>Sekciona garažna vrata HOME X</option>
+          <option>Sekciona garažna vrata HOME F</option>
+          <option>Industrijska vrata</option>
+          <option>Rolo vrata</option>
+          <option>Klizna kapija</option>
+          <option>Krilna kapija</option>
+          <option>Parking rampa</option>
+          <option>Motor za kapiju</option>
+          <option>Ostalo</option>
+        </select>
+        <div class="grid two">
+          <div class="kapija-hide">
+            <label>Boja</label>
+            <select id="boja">
+              <option></option><option>Antracit</option><option>Silver</option><option>Bijela</option><option>Braon</option><option>Golden Oak</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid two">
+          <div><label>Motor</label><select id="motor"><option></option><option>Lijevo</option><option>Desno</option><option>Plafon</option></select></div>
+          <div><label>Struja dovedena</label><select id="struja"><option></option><option>DA</option><option>NE</option><option>Ne znam</option></select></div>
+        </div>
+        <div class="grid two">
+          <div class="kapija-hide"><label>Demontaža starih vrata</label><select id="demontaza"><option></option><option>DA</option><option>NE</option><option>Nema starih vrata</option></select></div>
+          <div><label>Pristup vozilom</label><select id="pristup"><option></option><option>Dobar</option><option>Otežan</option><option>Nema pristupa</option></select></div>
+        </div>
+      </div>
+
+      <div id="krilnaKapijaBox" class="card gate-extra">
+        <div class="section-title"><span class="num">K</span> Krilna kapija – mjerenje A / B / C</div>
+        <div class="gate-note">Ovaj dio se prikazuje samo kada je izabran tip proizvoda <b>Krilna kapija</b>. Upisati mjere sa šeme.</div>
+        <div class="gate-diagrams">
+          <div class="gate-diagram">
+            <div class="gate-diagram-title">OTVARANJE PREMA UNUTRA</div>
+            <svg viewBox="0 0 520 220" role="img" aria-label="Krilna kapija otvaranje prema unutra A B C">
+              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
+              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
+              <text x="49" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
+              <text x="471" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
+              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"/>
+              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"/>
+              <line x1="88" y1="151" x2="225" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
+              <line x1="432" y1="151" x2="295" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
+              <path d="M86 150 Q120 205 188 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
+              <path d="M434 150 Q400 205 332 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
+              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr1)"/>
+              <text x="95" y="62" text-anchor="middle" font-size="16" font-weight="800">A</text>
+              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr1)"/>
+              <text x="10" y="130" text-anchor="middle" font-size="16" font-weight="800" transform="rotate(-90 10 130)">B</text>
+              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr1)"/>
+              <text x="151" y="96" text-anchor="middle" font-size="16" font-weight="800">C</text>
+              <defs><marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"/></marker></defs>
+            </svg>
+          </div>
+          <div class="gate-diagram">
+            <div class="gate-diagram-title">OTVARANJE PREMA VAN</div>
+            <svg viewBox="0 0 520 220" role="img" aria-label="Krilna kapija otvaranje prema van A B C">
+              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
+              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
+              <text x="49" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
+              <text x="471" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
+              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"/>
+              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"/>
+              <line x1="88" y1="151" x2="225" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
+              <line x1="432" y1="151" x2="295" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
+              <path d="M86 150 Q110 42 190 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
+              <path d="M434 150 Q410 42 330 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
+              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr2)"/>
+              <text x="95" y="62" text-anchor="middle" font-size="16" font-weight="800">A</text>
+              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr2)"/>
+              <text x="10" y="130" text-anchor="middle" font-size="16" font-weight="800" transform="rotate(-90 10 130)">B</text>
+              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr2)"/>
+              <text x="151" y="96" text-anchor="middle" font-size="16" font-weight="800">C</text>
+              <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"/></marker></defs>
+            </svg>
+          </div>
+        </div>
+        <div class="gate-measures">
+          <div class="grid two">
+            <div><label>Smjer otvaranja krilne kapije</label><select id="krilnaSmjer"><option></option><option>Otvaranje prema unutra</option><option>Otvaranje prema van</option></select></div>
+            <div><label>Ugao otvaranja</label><select id="krilnaUgao"><option></option><option>90°</option><option>110°</option><option>Drugo</option></select></div>
+          </div>
+          <div class="grid three">
+            <div><label>A mjera</label><input id="krilnaA" type="number" inputmode="decimal" placeholder="A"></div>
+            <div><label>B mjera</label><input id="krilnaB" type="number" inputmode="decimal" placeholder="B"></div>
+            <div><label>C mjera</label><input id="krilnaC" type="number" inputmode="decimal" placeholder="C"></div>
+          </div>
+          <div class="gate-note">Mjere A, B i C upisati prema šemi. Ostali tekst sa originalnih slika je uklonjen da radniku ostane samo crtež i mjere.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span class="num">3</span> Mjere u milimetrima</div>
+        <div class="measure-box">
+          <div class="grid two">
+            <div id="sirinaWrap"><label id="sirinaLabel" class="req">Širina otvora mm</label><input id="sirina" type="number" inputmode="numeric" placeholder="npr. 3000" required></div>
+            <div id="visinaWrap"><label id="visinaLabel" class="req">Visina otvora mm</label><input id="visina" type="number" inputmode="numeric" placeholder="npr. 2250" required></div>
+          </div>
+        </div>
+        <div class="grid three">
+          <div class="kapija-hide"><label>Nadvoj mm</label><input id="nadvoj" type="number" inputmode="numeric"></div>
+          <div class="kapija-hide"><label>Lijevi špalet mm</label><input id="lijevi" type="number" inputmode="numeric"></div>
+          <div class="kapija-hide"><label>Desni špalet mm</label><input id="desni" type="number" inputmode="numeric"></div>
+        </div>
+        <div class="grid two">
+          <div class="kapija-hide"><label>Dubina prostora mm</label><input id="dubina" type="number" inputmode="numeric"></div>
+          <div class="kapija-hide"><label>Visina plafona mm</label><input id="plafon" type="number" inputmode="numeric"></div>
+        </div>
+        <div class="hint kapija-hide">Obavezno provjeri lijevi/desni špalet, nadvoj i dubinu prostora prije slanja mjerenja.</div>
+      </div>
+
+      <div class="card kapija-hide">
+        <div class="section-title"><span class="num">4</span> Kontrolna lista sa terena</div>
+        <div class="checks">
+          <div class="check"><input id="chkPod" type="checkbox"><label for="chkPod">Pod provjeren / ravan</label></div>
+          <div class="check"><input id="chkZid" type="checkbox"><label for="chkZid">Zidovi i špaleti provjereni</label></div>
+          <div class="check"><input id="chkPrepreke" type="checkbox"><label for="chkPrepreke">Nema prepreka za montažu</label></div>
+          <div class="check"><input id="chkSlike" type="checkbox"><label for="chkSlike">Slike objekta napravljene</label></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span class="num">5</span> Napomena sa terena</div>
+        <label>Napomena sa terena</label>
+        <textarea id="napomena" placeholder="Npr. nema struje, neravan pod, loš zid, prepreke, pristup objektu, potreban kran/viljuškar..."></textarea>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span class="num">6</span> Slike objekta</div>
+        <label>Dodaj / uslikaj objekat</label>
+        <input id="photosInput" type="file" accept="image/*" capture="environment" multiple onchange="handlePhotoFiles(this.files)">
+        <div class="hint">Slike se umanje i čuvaju u nacrtu na ovom telefonu. Za obradu naloga koristi dugme “Sačuvaj obrazac + slike”.</div>
+        <div class="photo-actions">
+          <button type="button" class="light" onclick="document.getElementById('photosInput').click()">Dodaj još slika</button>
+          <button type="button" class="danger" onclick="clearPhotos()">Obriši slike</button>
+        </div>
+        <div id="photoPreview" class="photo-preview"></div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="primary" onclick="copyReport()">Kopiraj izvještaj</button>
+        <button type="button" class="secondary" onclick="shareReport()">Podijeli / pošalji</button>
+        <button type="button" class="light" onclick="saveDraft()">Sačuvaj nacrt</button>
+        <button type="button" class="light" onclick="downloadFullForm()">Sačuvaj obrazac + slike</button>
+        <button type="button" class="danger" onclick="clearForm()">Očisti</button>
+      </div>
+    </form>
+
+    <div id="output" class="output"></div>
+    <div class="footer-note">ALUROL doo – obrazac za mjerenje na terenu</div>
+  </div>
+
+<script>
+  const ids = ["datum","radnik","kupac","telefon","mjesto","adresa","tip","boja","motor","struja","demontaza","pristup","krilnaSmjer","krilnaUgao","krilnaA","krilnaB","krilnaC","sirina","visina","nadvoj","lijevi","desni","dubina","plafon","napomena","chkPod","chkZid","chkPrepreke","chkSlike"];
+  const draftKey = "alurol_mjerenje_draft_v3_photos";
+  let photos = [];
+  function el(id){ return document.getElementById(id); }
+  function val(id){ const node = el(id); if (!node) return ""; if (node.type === "checkbox") return node.checked ? "DA" : "NE"; return (node.value || "").trim(); }
+  function selectedColor(){ return val("boja"); }
+  function isKrilnaKapija(){ return val("tip") === "Krilna kapija"; }
+  function isKliznaKapija(){ return val("tip") === "Klizna kapija"; }
+  function isKliznaOrKrilnaKapija(){ const t = val("tip"); return t === "Klizna kapija" || t === "Krilna kapija"; }
+  function updateMeasureLabels(){
+    const sirinaLabel = el("sirinaLabel");
+    const visinaLabel = el("visinaLabel");
+    const sirinaInput = el("sirina");
+    const visinaInput = el("visina");
+    const visinaWrap = el("visinaWrap");
+    if(isKrilnaKapija()){
+      if(sirinaLabel) sirinaLabel.textContent = "Širina lijevog krila mm";
+      if(visinaLabel) visinaLabel.textContent = "Širina desnog krila mm";
+      if(sirinaInput) sirinaInput.placeholder = "npr. 1500";
+      if(visinaInput){ visinaInput.placeholder = "npr. 1500"; visinaInput.required = true; }
+      if(visinaWrap) visinaWrap.style.display = "block";
+    } else if(isKliznaKapija()){
+      if(sirinaLabel) sirinaLabel.textContent = "Dužina kapije mm";
+      if(sirinaInput) sirinaInput.placeholder = "npr. 4000";
+      if(visinaInput){ visinaInput.required = false; visinaInput.value = ""; }
+      if(visinaWrap) visinaWrap.style.display = "none";
+    } else {
+      if(sirinaLabel) sirinaLabel.textContent = "Širina otvora mm";
+      if(visinaLabel) visinaLabel.textContent = "Visina otvora mm";
+      if(sirinaInput) sirinaInput.placeholder = "npr. 3000";
+      if(visinaInput){ visinaInput.placeholder = "npr. 2250"; visinaInput.required = true; }
+      if(visinaWrap) visinaWrap.style.display = "block";
+    }
+  }
+  function krilnaReport(){
+    if(!isKrilnaKapija()) return "";
+    return `
+KRILNA KAPIJA – MJERE MOTORA:
+Smjer otvaranja: ${val("krilnaSmjer")}
+Ugao otvaranja: ${val("krilnaUgao")}
+A mjera: ${val("krilnaA")}
+B mjera: ${val("krilnaB")}
+C mjera: ${val("krilnaC")}
+`;
+  }
+  function toggleKrilnaKapija(){
+    const box = el("krilnaKapijaBox");
+    if(!box) return;
+    box.classList.toggle("show", isKrilnaKapija());
+  }
+  function toggleKapijaFields(){
+    const hide = isKliznaOrKrilnaKapija();
+    document.querySelectorAll(".kapija-hide").forEach(node => node.classList.toggle("hidden-for-kapija", hide));
+    if(hide){
+      ["boja","demontaza","nadvoj","lijevi","desni","dubina","plafon"].forEach(id => { const node = el(id); if(node) node.value = ""; });
+      ["chkPod","chkZid","chkPrepreke","chkSlike"].forEach(id => { const node = el(id); if(node) node.checked = false; });
+    }
+  }
+  function updateConditionalFields(){ toggleKrilnaKapija(); toggleKapijaFields(); updateMeasureLabels(); }
+  function makeReport(){
+    const kapija = isKliznaOrKrilnaKapija();
+    const proizvodExtra = kapija
+      ? `Motor: ${val("motor")}
+Struja dovedena: ${val("struja")}
+Pristup vozilom: ${val("pristup")}`
+      : `Boja: ${selectedColor()}
+Motor: ${val("motor")}
+Struja dovedena: ${val("struja")}
+Demontaža starih vrata: ${val("demontaza")}
+Pristup vozilom: ${val("pristup")}`;
+    const mjereExtra = kapija
+      ? ""
+      : `Nadvoj: ${val("nadvoj")} mm
+Lijevi špalet: ${val("lijevi")} mm
+Desni špalet: ${val("desni")} mm
+Dubina prostora: ${val("dubina")} mm
+Visina plafona: ${val("plafon")} mm
+`;
+    const kontrolna = kapija
+      ? ""
+      : `
+KONTROLNA LISTA:
+Pod provjeren / ravan: ${val("chkPod")}
+Zidovi i špaleti provjereni: ${val("chkZid")}
+Nema prepreka za montažu: ${val("chkPrepreke")}
+Slike objekta napravljene: ${val("chkSlike")}
+`;
+    let mjereOsnovne = `Širina otvora: ${val("sirina")} mm
+Visina otvora: ${val("visina")} mm`;
+    if(isKrilnaKapija()){
+      mjereOsnovne = `Širina lijevog krila: ${val("sirina")} mm
+Širina desnog krila: ${val("visina")} mm`;
+    } else if(isKliznaKapija()){
+      mjereOsnovne = `Dužina kapije: ${val("sirina")} mm`;
+    }
+    return `ALUROL MJERENJE
+
+Datum mjerenja: ${val("datum")}
+Radnik: ${val("radnik")}
+
+KUPAC:
+Kupac/firma: ${val("kupac")}
+Telefon: ${val("telefon")}
+Mjesto: ${val("mjesto")}
+Adresa: ${val("adresa")}
+
+PROIZVOD:
+Tip proizvoda: ${val("tip")}
+${proizvodExtra}${krilnaReport()}
+MJERE:
+${mjereOsnovne}
+${mjereExtra}${kontrolna}
+NAPOMENA:
+${val("napomena")}
+
+FOTOGRAFIJE:
+Sačuvano uz obrazac: ${photos.length} ${photos.length === 1 ? "slika" : "slika"}.
+Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod poruke.`;
+  }
+  function requiredOk(){
+    if(!val("kupac") || !val("telefon") || !val("sirina") || (!isKliznaKapija() && !val("visina"))){
+      if(isKliznaKapija()) alert("Popuni obavezno: kupac, telefon i dužina kapije.");
+      else if(isKrilnaKapija()) alert("Popuni obavezno: kupac, telefon, širina lijevog krila i širina desnog krila.");
+      else alert("Popuni obavezno: kupac, telefon, širina i visina.");
+      return false;
+    }
+    return true;
+  }
+  async function copyReport(){
+    if(!requiredOk()) return;
+    const report = makeReport();
+    el("output").style.display = "block";
+    el("output").textContent = report;
+    try{ await navigator.clipboard.writeText(report); alert("Izvještaj je kopiran. Sada ga zalijepi u Viber ili WhatsApp."); }
+    catch(e){ alert("Kopiranje nije uspjelo. Označi tekst ispod i kopiraj ručno."); }
+  }
+  async function shareReport(){
+    if(!requiredOk()) return;
+    const report = makeReport();
+    if(navigator.share){
+      try{
+        const files = photos.map((p, idx) => dataUrlToFile(p.dataUrl, p.name || `slika-${idx + 1}.jpg`)).filter(Boolean);
+        if(files.length && navigator.canShare && navigator.canShare({ files })){
+          await navigator.share({ title:"ALUROL mjerenje", text:report, files });
+        } else {
+          await navigator.share({ title:"ALUROL mjerenje", text:report });
+        }
+      }catch(e){}
+    } else { copyReport(); }
+  }
+
+  async function handlePhotoFiles(fileList){
+    const files = Array.from(fileList || []);
+    for(const file of files){
+      if(!file.type.startsWith("image/")) continue;
+      try{
+        const dataUrl = await compressImage(file, 1400, 0.78);
+        photos.push({ name:file.name || `slika-${Date.now()}.jpg`, dataUrl, createdAt:new Date().toISOString() });
+      }catch(e){ alert("Slika nije mogla biti učitana: " + (file.name || "")); }
+    }
+    el("photosInput").value = "";
+    renderPhotos();
+    saveDraft(false);
+  }
+
+  function compressImage(file, maxSize, quality){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = reject;
+        img.onload = () => {
+          let { width, height } = img;
+          const scale = Math.min(1, maxSize / Math.max(width, height));
+          width = Math.round(width * scale);
+          height = Math.round(height * scale);
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function renderPhotos(){
+    const box = el("photoPreview");
+    if(!box) return;
+    box.innerHTML = photos.map((p, idx) => `
+      <div class="photo-card">
+        <img src="${p.dataUrl}" alt="Slika objekta ${idx + 1}">
+        <div class="photo-name">Slika ${idx + 1}: ${escapeHtml(p.name || "objekat.jpg")}</div>
+        <button type="button" class="danger" onclick="removePhoto(${idx})">Obriši</button>
+      </div>
+    `).join("");
+  }
+
+  function removePhoto(index){ photos.splice(index, 1); renderPhotos(); saveDraft(false); }
+  function clearPhotos(){ if(!photos.length) return; if(confirm("Obrisati sve slike iz obrasca?")){ photos = []; renderPhotos(); saveDraft(false); } }
+
+  function dataUrlToFile(dataUrl, filename){
+    try{
+      const arr = dataUrl.split(",");
+      const mime = (arr[0].match(/:(.*?);/) || [])[1] || "image/jpeg";
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while(n--) u8arr[n] = bstr.charCodeAt(n);
+      return new File([u8arr], filename.replace(/\s+/g,"_"), { type:mime });
+    }catch(e){ return null; }
+  }
+
+  function escapeHtml(text){ return String(text || "").replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m] || m)); }
+
+  function downloadFullForm(){
+    if(!requiredOk()) return;
+    const reportHtml = makeReport().split("\n").map(escapeHtml).join("<br>");
+    const imagesHtml = photos.length ? photos.map((p, i) => `<div style="page-break-inside:avoid;margin:10px 0"><h3>Slika ${i+1}</h3><img src="${p.dataUrl}" style="max-width:100%;border:1px solid #ccc;border-radius:8px"></div>`).join("") : "<p>Nema dodanih slika.</p>";
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>ALUROL mjerenje - ${escapeHtml(val("kupac"))}</title><style>body{font-family:Arial,sans-serif;padding:20px;color:#111}h1{font-size:22px}.report{white-space:normal;background:#f6f7f9;border:1px solid #ddd;border-radius:10px;padding:14px;line-height:1.45}@media print{body{padding:0}}</style></head><body><h1>ALUROL MJERENJE</h1><div class="report">${reportHtml}</div><h2>Slike objekta</h2>${imagesHtml}</body></html>`;
+    const blob = new Blob([html], { type:"text/html;charset=utf-8" });
+    const a = document.createElement("a");
+    const safeName = (val("kupac") || "mjerenje").replace(/[^a-z0-9čćšđž_-]+/gi,"_");
+    a.href = URL.createObjectURL(blob);
+    a.download = `ALUROL_mjerenje_${safeName}_${new Date().toISOString().slice(0,10)}.html`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  function saveDraft(showMessage = true){
+    const data = { photos };
+    ids.forEach(id => { const node = el(id); if(!node) return; data[id] = node.type === "checkbox" ? node.checked : node.value; });
+    try{
+      localStorage.setItem(draftKey, JSON.stringify(data));
+      if(showMessage) alert("Nacrt je sačuvan na ovom telefonu zajedno sa slikama.");
+    }catch(e){
+      alert("Nacrt nije sačuvan jer su slike prevelike. Obriši neku sliku ili koristi manje fotografije.");
+    }
+  }
+  function loadDraft(){
+    try{
+      const raw = localStorage.getItem(draftKey); if(!raw) return;
+      const data = JSON.parse(raw);
+      ids.forEach(id => { const node = el(id); if(!node || data[id] === undefined) return; if(node.type === "checkbox") node.checked = !!data[id]; else node.value = data[id]; });
+      photos = Array.isArray(data.photos) ? data.photos : [];
+      renderPhotos();
+    }catch(e){}
+  }
+  function clearForm(){
+    if(!confirm("Obrisati sva polja iz obrasca?")) return;
+    el("measurementForm").reset();
+    localStorage.removeItem(draftKey);
+    photos = [];
+    renderPhotos();
+    el("output").style.display = "none";
+    setToday(); setDefaultWorker();
+  }
+  function setToday(){ const d = el("datum"); if(d && !d.value) d.value = new Date().toISOString().split("T")[0]; }
+  function setDefaultWorker(){ const r = el("radnik"); if(r && !r.value) r.value = "Mijatović Draško"; }
+  const tipSelect = el("tip");
+  if(tipSelect) tipSelect.addEventListener("change", updateConditionalFields);
+  loadDraft(); setToday(); setDefaultWorker(); updateConditionalFields();
+</script>
+</body>
+</html>
