@@ -95,12 +95,12 @@
           <div><label>Datum mjerenja</label><input id="datum" type="date"></div>
           <div><label>Radnik koji je mjerio</label><input id="radnik" type="text" value="Mijatović Draško" placeholder="Ime radnika"></div>
         </div>
-        <label class="req">Kupac / firma</label><input id="kupac" type="text" placeholder="Ime kupca ili firma" required>
+        <label class="req">Kupac / firma</label><input id="kupac" type="text" required>
         <div class="grid two">
-          <div><label class="req">Telefon</label><input id="telefon" type="tel" placeholder="065/000-000" required></div>
-          <div><label>Mjesto</label><input id="mjesto" type="text" placeholder="Banja Luka"></div>
+          <div><label class="req">Telefon</label><input id="telefon" type="tel" required></div>
+          <div><label>Mjesto</label><input id="mjesto" type="text"></div>
         </div>
-        <label>Adresa mjerenja</label><input id="adresa" type="text" placeholder="Ulica i broj">
+        <label>Adresa mjerenja</label><input id="adresa" type="text">
       </div>
 
       <div class="card">
@@ -365,25 +365,14 @@ function getVisibleFields() {
 function focusAndShow(field) {
   field.focus({ preventScroll: true });
 
-  function pomjeriDoPolja() {
-    const rect = field.getBoundingClientRect();
-    const visibleHeight = window.visualViewport
-      ? window.visualViewport.height
-      : window.innerHeight;
-
-    const desiredTop = visibleHeight * 0.30;
-    const pomjeranje = rect.top - desiredTop;
-
-    window.scrollBy({
-      top: pomjeranje,
-      behavior: "smooth"
+  // Sačekaj da se Android tastatura otvori, pa postavi polje u vidljivi dio ekrana.
+  setTimeout(() => {
+    field.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest"
     });
-  }
-
-  // Android tastaturi treba vremena da se potpuno otvori
-  setTimeout(pomjeriDoPolja, 150);
-  setTimeout(pomjeriDoPolja, 450);
-  setTimeout(pomjeriDoPolja, 800);
+  }, 180);
 }
 
 measurementForm.addEventListener("focusin", (event) => {
@@ -654,7 +643,6 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
   function escapeHtml(text){ return String(text || "").replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m] || m)); }
 
   function downloadFullForm(){
-    if(!requiredOk()) return;
     const reportHtml = makeReport().split("\n").map(escapeHtml).join("<br>");
     const imagesHtml = photos.length ? photos.map((p, i) => `<div style="page-break-inside:avoid;margin:10px 0"><h3>Slika ${i+1}</h3><img src="${p.dataUrl}" style="max-width:100%;border:1px solid #ccc;border-radius:8px"></div>`).join("") : "<p>Nema dodanih slika.</p>";
     const html = `<!doctype html><html><head><meta charset="utf-8"><title>ALUROL mjerenje - ${escapeHtml(val("kupac"))}</title><style>body{font-family:Arial,sans-serif;padding:20px;color:#111}h1{font-size:22px}.report{white-space:normal;background:#f6f7f9;border:1px solid #ddd;border-radius:10px;padding:14px;line-height:1.45}@media print{body{padding:0}}</style></head><body><h1>ALUROL MJERENJE</h1><div class="report">${reportHtml}</div><h2>Slike objekta</h2>${imagesHtml}</body></html>`;
