@@ -107,6 +107,7 @@
         <div class="section-title"><span class="num">2</span> Proizvod i oprema</div>
         <label class="req">Tip proizvoda</label>
         <select id="tip" required>
+          <option value="">Odaberi tip proizvoda</option>
           <option>Sekciona garažna vrata HOME X</option>
           <option>Sekciona garažna vrata HOME F</option>
           <option>Industrijska vrata</option>
@@ -302,9 +303,9 @@ const val = (id) => document.getElementById(id)?.value?.trim() || "";
       dubina_prostora: val("dubina"),
       visina_plafona: val("plafon"),
 
-      mjera_a: val("mjeraA"),
-      mjera_b: val("mjeraB"),
-      mjera_c: val("mjeraC"),
+      mjera_a: val("krilnaA"),
+      mjera_b: val("krilnaB"),
+      mjera_c: val("krilnaC"),
 
       napomena: val("napomena"),
       slike: window.savedPhotos || []
@@ -321,9 +322,118 @@ const val = (id) => document.getElementById(id)?.value?.trim() || "";
     }
 
     alert("Mjerenje je poslano u ALUROL arhivu.");
+
+    // Poslije uspješnog slanja pripremi potpuno čist obrazac za novo mjerenje.
+    document.getElementById("measurementForm").reset();
+    localStorage.removeItem("alurol_mjerenje_draft_v3_photos");
+
+    const dateField = document.getElementById("datum");
+    if (dateField) dateField.value = new Date().toISOString().split("T")[0];
+
+    const workerField = document.getElementById("radnik");
+    if (workerField) workerField.value = "Mijatović Draško";
+
+    const output = document.getElementById("output");
+    if (output) output.style.display = "none";
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    setTimeout(() => {
+      const firstField = document.getElementById("kupac");
+      if (firstField) firstField.focus({ preventScroll: true });
+    }, 400);
   }
 </script>
 <script>
+  // Android tastatura: Dalje prelazi na sljedeće vidljivo polje
+const measurementForm = document.getElementById("measurementForm");
+
+function getVisibleFields() {
+  return Array.from(
+    measurementForm.querySelectorAll(
+      'input:not([type="hidden"]):not([type="file"]):not([type="checkbox"]), select, textarea'
+    )
+  ).filter((field) => {
+    return (
+      !field.disabled &&
+      field.offsetParent !== null &&
+      getComputedStyle(field).visibility !== "hidden"
+    );
+  });
+}
+
+function focusAndShow(field) {
+  field.focus({ preventScroll: true });
+
+  function pomjeriDoPolja() {
+    const rect = field.getBoundingClientRect();
+    const visibleHeight = window.visualViewport
+      ? window.visualViewport.height
+      : window.innerHeight;
+
+    const desiredTop = visibleHeight * 0.30;
+    const pomjeranje = rect.top - desiredTop;
+
+    window.scrollBy({
+      top: pomjeranje,
+      behavior: "smooth"
+    });
+  }
+
+  // Android tastaturi treba vremena da se potpuno otvori
+  setTimeout(pomjeriDoPolja, 150);
+  setTimeout(pomjeriDoPolja, 450);
+  setTimeout(pomjeriDoPolja, 800);
+}
+
+measurementForm.addEventListener("focusin", (event) => {
+  const field = event.target;
+  if (!field.matches("input, select, textarea")) return;
+
+  setTimeout(() => {
+    field.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest"
+    });
+  }, 250);
+});
+
+measurementForm.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") return;
+
+  const currentField = event.target;
+
+  // U polju Napomena Enter ostaje za novi red
+  if (currentField.tagName === "TEXTAREA") return;
+
+  const fields = getVisibleFields();
+  const currentIndex = fields.indexOf(currentField);
+
+  if (currentIndex === -1) return;
+
+  event.preventDefault();
+
+  const nextField = fields[currentIndex + 1];
+
+  if (nextField) {
+    focusAndShow(nextField);
+  } else {
+    currentField.blur();
+  }
+});
+
+// Android tastaturi govori gdje je "Dalje", a gdje "Gotovo"
+const keyboardFields = getVisibleFields();
+
+keyboardFields.forEach((field, index) => {
+  if (field.tagName !== "TEXTAREA") {
+    field.setAttribute(
+      "enterkeyhint",
+      index === keyboardFields.length - 1 ? "done" : "next"
+    );
+  }
+});
   const ids = ["datum","radnik","kupac","telefon","mjesto","adresa","tip","boja","motor","struja","demontaza","pristup","krilnaSmjer","krilnaUgao","krilnaA","krilnaB","krilnaC","sirina","visina","nadvoj","lijevi","desni","dubina","plafon","napomena","chkPod","chkZid","chkPrepreke","chkSlike"];
   const draftKey = "alurol_mjerenje_draft_v3_photos";
   let photos = [];
@@ -590,7 +700,7 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
   function setDefaultWorker(){ const r = el("radnik"); if(r && !r.value) r.value = "Mijatović Draško"; }
   const tipSelect = el("tip");
   if(tipSelect) tipSelect.addEventListener("change", updateConditionalFields);
-  loadDraft(); setToday(); setDefaultWorker(); updateConditionalFields();
+  setToday(); setDefaultWorker(); updateConditionalFields();
 </script>
 </body>
 </html>
