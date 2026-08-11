@@ -478,9 +478,47 @@ duzina_kapije: val("tip") === "Klizna kapija"
    val("tip") === "Industrijska vrata")
     ? `Sistem vješanja: ${val("systemVjesanja")}${val("napomena") ? "\n" + val("napomena") : ""}`
     : val("napomena"),
-      slike: window.savedPhotos || []
+      slike: []
     };
+const imageUrls = [];
 
+const photosToUpload = photos || [];
+
+for (let i = 0; i < photosToUpload.length; i++) {
+  const photoData = photosToUpload[i];
+
+  const response = await fetch(photoData);
+  const blob = await response.blob();
+
+  const extension =
+    blob.type === "image/png" ? "png" :
+    blob.type === "image/webp" ? "webp" :
+    "jpg";
+
+  const fileName =
+    `mjerenje_${Date.now()}_${i}.${extension}`;
+
+  const { error: uploadError } = await supabaseClient.storage
+    .from("mjerenja_slike")
+    .upload(fileName, blob, {
+      contentType: blob.type,
+      upsert: false
+    });
+
+  if (uploadError) {
+    alert("Greška pri slanju slike: " + uploadError.message);
+    console.error(uploadError);
+    return;
+  }
+
+  const { data: publicData } = supabaseClient.storage
+    .from("mjerenja_slike")
+    .getPublicUrl(fileName);
+
+  imageUrls.push(publicData.publicUrl);
+}
+
+payload.slike = imageUrls;
     const { error } = await supabaseClient
       .from("measurements")
       .insert([payload]);
