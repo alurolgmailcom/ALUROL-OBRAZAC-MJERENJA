@@ -1376,7 +1376,9 @@ function fileToDataUrl(file) {
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     }
     function saveDraft(showMessage = true) {
-      const data = { photos };
+      const data = {
+  photos: photos.filter(p => !(p.type && p.type.startsWith("video/")))
+};
       ids.forEach(id => { const node = el(id); if (!node) return; data[id] = node.type === "checkbox" ? node.checked : node.value; });
       try {
         localStorage.setItem(draftKey, JSON.stringify(data));
