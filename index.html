@@ -485,7 +485,7 @@ const imageUrls = [];
 const photosToUpload = photos || [];
 
 for (let i = 0; i < photosToUpload.length; i++) {
-  const photoData = photosToUpload[i].slika;
+  const photoData = photosToUpload[i].dataUrl;
 
   const response = await fetch(photoData);
   const blob = await response.blob();
