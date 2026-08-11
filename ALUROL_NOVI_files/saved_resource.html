@@ -1,11 +1,11 @@
-<!doctype html>
-<html lang="bs">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="favicon.png">
-<link rel="apple-touch-icon" href="icon-512.png">
-<link rel="manifest" href="manifest.json">
+<!DOCTYPE html>
+<!-- saved from url=(0040)https://web-sandbox.oaiusercontent.com/? -->
+<html lang="bs"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="https://web-sandbox.oaiusercontent.com/favicon.png">
+<link rel="apple-touch-icon" href="https://web-sandbox.oaiusercontent.com/icon-512.png">
+<link rel="manifest" href="https://web-sandbox.oaiusercontent.com/manifest.json">
 
   <title>ALUROL – Obrazac za mjerenje</title>
   <style>
@@ -48,8 +48,8 @@
     .check{display:flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--border);border-radius:10px;padding:9px}
     .check input{width:auto;margin:0}
     .check label{margin:0;font-weight:600;font-size:14px}
-    .actions{position:fixed;left:0;right:0;bottom:0;background:rgba(244,245,247,.97);border-top:1px solid var(--border);padding:10px 12px;display:grid;gap:8px;grid-template-columns:1fr 1fr;z-index:10}
-    @media(min-width:720px){.actions{left:50%;transform:translateX(-50%);max-width:920px;border:1px solid var(--border);border-bottom:0;border-radius:16px 16px 0 0;grid-template-columns:1.2fr 1.2fr 1fr 1fr}}
+    .actions{position:fixed;left:0;right:0;bottom:0;background:rgba(244,245,247,.97);border-top:1px solid var(--border);padding:10px 12px;display:grid;gap:8px;grid-template-columns:1fr;z-index:10}
+    @media(min-width:720px){.actions{left:50%;transform:translateX(-50%);max-width:920px;border:1px solid var(--border);border-bottom:0;border-radius:16px 16px 0 0;grid-template-columns:1fr 1fr 1fr}}
     button{border:0;border-radius:12px;padding:13px 12px;font-size:15px;font-weight:800;cursor:pointer}
     .primary{background:var(--primary);color:#fff}.primary:active{background:var(--primary-dark)}
     .secondary{background:var(--dark);color:#fff}.light{background:#e5e7eb;color:#111827}.danger{background:#fee2e2;color:#991b1b}
@@ -76,8 +76,24 @@
     .gate-diagram svg{width:100%;height:auto;display:block;border-radius:8px;background:#f9fafb;}
     .gate-measures{margin-top:12px;border-top:1px solid var(--border);padding-top:10px;}
     .gate-note{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.35;}
+    .top-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+    .view-hidden{display:none!important}
+    .archive-search{margin-bottom:10px}
+    .archive-list{display:grid;gap:10px}
+    .archive-item{border:1px solid var(--border);border-radius:12px;background:#fff;padding:12px}
+    .archive-item-title{font-weight:800;font-size:16px}
+    .archive-item-meta{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.4}
+    .archive-item-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .archive-details{margin-top:10px;background:var(--soft);border-radius:10px;padding:10px;display:none}
+    .archive-details.show{display:block}
+    .archive-details-row{margin:4px 0;font-size:14px;line-height:1.35}
+    .archive-empty{text-align:center;color:var(--muted);padding:18px}
+    .sectional-only{display:none}
+    .sectional-only.show{display:block}
+    .equipment-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+    @media(min-width:900px){.equipment-grid{grid-template-columns:repeat(4,1fr)}}
   </style>
-</head>
+<style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style></head>
 <body>
   <div class="wrap">
     <div class="header">
@@ -88,25 +104,38 @@
       <div class="sub">Popuni na telefonu. Na kraju klikni “Kopiraj izvještaj” ili “Podijeli / pošalji”. Fotografije možeš uslikati i sačuvati zajedno sa obrascem.</div>
     </div>
 
+    <div class="top-nav">
+      <button type="button" class="primary" onclick="showNewMeasurement()">NOVO MJERENJE</button>
+      <button type="button" class="secondary" onclick="showArchive()">ARHIVA MJERENJA</button>
+    </div>
+
+    <div id="archiveView" class="view-hidden">
+      <div class="card">
+        <div class="section-title"><span class="num">A</span> Arhiva mjerenja</div>
+        <input id="archiveSearch" class="archive-search" type="text" placeholder="Pretraga po kupcu" oninput="renderArchive()">
+        <div id="archiveList" class="archive-list"></div>
+      </div>
+    </div>
+
     <form id="measurementForm">
       <div class="card">
         <div class="section-title"><span class="num">1</span> Podaci kupca</div>
         <div class="grid two">
-          <div><label>Datum mjerenja</label><input id="datum" type="date"></div>
-          <div><label>Radnik koji je mjerio</label><input id="radnik" type="text" value="Mijatović Draško" placeholder="Ime radnika"></div>
+          <div><label>Datum mjerenja</label><input id="datum" type="date" enterkeyhint="next"></div>
+          <div><label>Radnik koji je mjerio</label><input id="radnik" type="text" value="Mijatović Draško" placeholder="Ime radnika" enterkeyhint="next"></div>
         </div>
-        <label class="req">Kupac / firma</label><input id="kupac" type="text" required>
+        <label class="req">Kupac / firma</label><input id="kupac" type="text" required="" enterkeyhint="next">
         <div class="grid two">
-          <div><label class="req">Telefon</label><input id="telefon" type="tel" required></div>
-          <div><label>Mjesto</label><input id="mjesto" type="text"></div>
+          <div><label class="req">Telefon</label><input id="telefon" type="tel" required="" enterkeyhint="next"></div>
+          <div><label>Mjesto</label><input id="mjesto" type="text" enterkeyhint="next"></div>
         </div>
-        <label>Adresa mjerenja</label><input id="adresa" type="text">
+        <label>Adresa mjerenja</label><input id="adresa" type="text" enterkeyhint="next">
       </div>
 
       <div class="card">
         <div class="section-title"><span class="num">2</span> Proizvod i oprema</div>
         <label class="req">Tip proizvoda</label>
-        <select id="tip" required>
+        <select id="tip" required="" enterkeyhint="next">
           <option value="">Odaberi tip proizvoda</option>
           <option>Sekciona garažna vrata HOME X</option>
           <option>Sekciona garažna vrata HOME F</option>
@@ -118,66 +147,35 @@
           <option>Motor za kapiju</option>
           <option>Ostalo</option>
         </select>
-        <div id="doorOptionsBox">
-          <div class="grid two">
-            <div>
-              <label>Boja</label>
-              <select id="boja">
-                <option></option>
-                <option>Antracit</option>
-                <option>Silver</option>
-                <option>Bijela</option>
-                <option>Braon</option>
-                <option>Golden Oak</option>
-              </select>
-            </div>
+        <div class="equipment-grid">
+          <div class="kapija-hide">
+            <label>Boja</label>
+            <select id="boja" enterkeyhint="next">
+              <option></option><option>Antracit</option><option>Silver</option><option>Bijela</option><option>Braon</option><option>Golden Oak</option>
+            </select>
           </div>
-
-          <div class="grid two">
-            <div>
-              <label>Motor</label>
-              <select id="motor">
-                <option></option>
-                <option>Lijevo</option>
-                <option>Desno</option>
-                <option>Plafon</option>
-              </select>
-            </div>
-
-            <div id="systemVjesanjaWrap">
-              <label>Sistem vješanja</label>
-              <select id="systemVjesanja">
-                <option value="Standardno" selected>Standardno</option>
-                <option value="Povišeno">Povišeno</option>
-                <option value="Vertikalno">Vertikalno</option>
-                <option value="Nisko">Nisko</option>
-              </select>
-            </div>
+          <div>
+            <label>Motor</label>
+            <select id="motor" enterkeyhint="next"><option></option><option>Plafon</option><option>Desno</option><option>Lijevo</option></select>
           </div>
-
-          <div class="grid two">
-            <div>
-              <label>Struja dovedena</label>
-              <select id="struja">
-                <option></option>
-                <option>DA</option>
-                <option>NE</option>
-                <option>Ne znam</option>
-              </select>
-            </div>
-
-            <div>
-              <label>Demontaža starih vrata</label>
-              <select id="demontaza">
-                <option></option>
-                <option>DA</option>
-                <option>NE</option>
-                <option>Nema starih vrata</option>
-              </select>
-            </div>
+          <div>
+            <label>Struja dovedena</label>
+            <select id="struja" enterkeyhint="next"><option></option><option>DA</option><option>NE</option><option>Ne znam</option></select>
+          </div>
+          <div class="kapija-hide">
+            <label>Demontaža starih vrata</label>
+            <select id="demontaza" enterkeyhint="done"><option></option><option>DA</option><option>NE</option><option>Nema starih vrata</option></select>
           </div>
         </div>
-      </div>
+
+        <div class="sectional-only" id="systemVjesanjaWrap">
+          <label>Sistem vješanja</label>
+          <select id="systemVjesanja">
+            <option></option><option>Standardno</option><option>Povišeno</option><option>Vertikalno</option><option>Nisko</option>
+          </select>
+        </div>
+        </div>
+      </form></div>
 
       <div id="krilnaKapijaBox" class="card gate-extra">
         <div class="section-title"><span class="num">K</span> Krilna kapija – mjerenje A / B / C</div>
@@ -186,45 +184,45 @@
           <div class="gate-diagram">
             <div class="gate-diagram-title">OTVARANJE PREMA UNUTRA</div>
             <svg viewBox="0 0 520 220" role="img" aria-label="Krilna kapija otvaranje prema unutra A B C">
-              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
-              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
+              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"></rect>
+              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"></rect>
               <text x="49" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
               <text x="471" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
-              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"/>
-              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"/>
-              <line x1="88" y1="151" x2="225" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
-              <line x1="432" y1="151" x2="295" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
-              <path d="M86 150 Q120 205 188 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
-              <path d="M434 150 Q400 205 332 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
-              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr1)"/>
+              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"></line>
+              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"></line>
+              <line x1="88" y1="151" x2="225" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"></line>
+              <line x1="432" y1="151" x2="295" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"></line>
+              <path d="M86 150 Q120 205 188 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"></path>
+              <path d="M434 150 Q400 205 332 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"></path>
+              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr1)"></line>
               <text x="95" y="62" text-anchor="middle" font-size="16" font-weight="800">A</text>
-              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr1)"/>
+              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr1)"></line>
               <text x="10" y="130" text-anchor="middle" font-size="16" font-weight="800" transform="rotate(-90 10 130)">B</text>
-              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr1)"/>
+              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr1)"></line>
               <text x="151" y="96" text-anchor="middle" font-size="16" font-weight="800">C</text>
-              <defs><marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"/></marker></defs>
+              <defs><marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"></path></marker></defs>
             </svg>
           </div>
           <div class="gate-diagram">
             <div class="gate-diagram-title">OTVARANJE PREMA VAN</div>
             <svg viewBox="0 0 520 220" role="img" aria-label="Krilna kapija otvaranje prema van A B C">
-              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
-              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
+              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"></rect>
+              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"></rect>
               <text x="49" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
               <text x="471" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
-              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"/>
-              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"/>
-              <line x1="88" y1="151" x2="225" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
-              <line x1="432" y1="151" x2="295" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
-              <path d="M86 150 Q110 42 190 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
-              <path d="M434 150 Q410 42 330 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
-              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr2)"/>
+              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"></line>
+              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"></line>
+              <line x1="88" y1="151" x2="225" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"></line>
+              <line x1="432" y1="151" x2="295" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"></line>
+              <path d="M86 150 Q110 42 190 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"></path>
+              <path d="M434 150 Q410 42 330 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"></path>
+              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr2)"></line>
               <text x="95" y="62" text-anchor="middle" font-size="16" font-weight="800">A</text>
-              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr2)"/>
+              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr2)"></line>
               <text x="10" y="130" text-anchor="middle" font-size="16" font-weight="800" transform="rotate(-90 10 130)">B</text>
-              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr2)"/>
+              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr2)"></line>
               <text x="151" y="96" text-anchor="middle" font-size="16" font-weight="800">C</text>
-              <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"/></marker></defs>
+              <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"></path></marker></defs>
             </svg>
           </div>
         </div>
@@ -242,12 +240,12 @@
         </div>
       </div>
 
-      <div id="standardMjereBox" class="card">
+      <div class="card">
         <div class="section-title"><span class="num">3</span> Mjere u milimetrima</div>
         <div class="measure-box">
           <div class="grid two">
-            <div id="sirinaWrap"><label id="sirinaLabel" class="req">Širina otvora mm</label><input id="sirina" type="number" inputmode="numeric" placeholder="npr. 3000" required></div>
-            <div id="visinaWrap"><label id="visinaLabel" class="req">Visina otvora mm</label><input id="visina" type="number" inputmode="numeric" placeholder="npr. 2250" required></div>
+            <div id="sirinaWrap"><label id="sirinaLabel" class="req">Širina otvora mm</label><input id="sirina" type="number" inputmode="numeric" placeholder="npr. 3000" required=""></div>
+            <div id="visinaWrap" style="display: block;"><label id="visinaLabel" class="req">Visina otvora mm</label><input id="visina" type="number" inputmode="numeric" placeholder="npr. 2250" required=""></div>
           </div>
         </div>
         <div class="grid three">
@@ -261,116 +259,6 @@
         </div>
         <div class="hint kapija-hide">Obavezno provjeri lijevi/desni špalet, nadvoj i dubinu prostora prije slanja mjerenja.</div>
       </div>
-      <div id="kliznaMjereBox" class="card gate-extra">
-  <div class="section-title"><span class="num">K</span> Mjerenje klizne kapije</div>
-<div style="margin:14px 0 18px;padding:10px;border:1px solid #d7dce2;border-radius:12px;background:#fff;">
-  <svg viewBox="0 0 900 390" style="width:100%;height:auto;display:block;" aria-label="Skica klizne kapije">
-
-    <!-- stubovi -->
-    <rect x="45" y="70" width="55" height="245" rx="3"
-          fill="#e5e7eb" stroke="#111827" stroke-width="4"/>
-    <rect x="610" y="70" width="55" height="245" rx="3"
-          fill="#e5e7eb" stroke="#111827" stroke-width="4"/>
-
-    <!-- okvir kapije - kvadratna cijev -->
-    <rect x="100" y="105" width="510" height="190"
-          fill="none" stroke="#111827" stroke-width="18"/>
-
-    <!-- srednja vertikala -->
-    <line x1="355" y1="105" x2="355" y2="295"
-          stroke="#111827" stroke-width="14"/>
-
-    <!-- produžetak / kontra teg -->
-    <line x1="610" y1="105" x2="800" y2="295"
-          stroke="#111827" stroke-width="14"/>
-    <line x1="610" y1="295" x2="800" y2="295"
-          stroke="#111827" stroke-width="18"/>
-
-    <!-- donja vodilica -->
-    <line x1="90" y1="325" x2="820" y2="325"
-          stroke="#6b7280" stroke-width="6"/>
-
-    <!-- čisti otvor -->
-    <line x1="100" y1="45" x2="610" y2="45"
-          stroke="#16a34a" stroke-width="4"/>
-    <path d="M100 45 l18 -9 v18 z M610 45 l-18 -9 v18 z"
-          fill="#16a34a"/>
-    <text x="355" y="30" text-anchor="middle"
-          font-size="20" font-weight="700" fill="#15803d">
-      ČISTI OTVOR / PROLAZ
-    </text>
-
-    <!-- visina -->
-    <line x1="125" y1="115" x2="125" y2="285"
-          stroke="#2563eb" stroke-width="4"/>
-    <path d="M125 115 l-9 18 h18 z M125 285 l-9 -18 h18 z"
-          fill="#2563eb"/>
-    <text x="145" y="205"
-          font-size="19" font-weight="700" fill="#2563eb">
-      VISINA
-    </text>
-
-    <!-- donja cijev -->
-    <line x1="375" y1="270" x2="375" y2="300"
-          stroke="#dc2626" stroke-width="4"/>
-    <path d="M375 270 l-8 14 h16 z M375 300 l-8 -14 h16 z"
-          fill="#dc2626"/>
-    <text x="390" y="270"
-          font-size="18" font-weight="700" fill="#dc2626">
-      DONJA CIJEV
-    </text>
-
-    <!-- dužina kapije -->
-    <line x1="100" y1="350" x2="610" y2="350"
-          stroke="#f97316" stroke-width="4"/>
-    <path d="M100 350 l18 -9 v18 z M610 350 l-18 -9 v18 z"
-          fill="#f97316"/>
-    <text x="355" y="378" text-anchor="middle"
-          font-size="19" font-weight="700" fill="#ea580c">
-      DUŽINA KAPIJE
-    </text>
-
-    <!-- prostor otvaranja -->
-    <line x1="665" y1="350" x2="800" y2="350"
-          stroke="#7c3aed" stroke-width="4"/>
-    <path d="M665 350 l18 -9 v18 z M800 350 l-18 -9 v18 z"
-          fill="#7c3aed"/>
-    <text x="730" y="335" text-anchor="middle"
-          font-size="16" font-weight="700" fill="#7c3aed">
-      PROSTOR OTVARANJA
-    </text>
-
-  </svg>
-</div>
-  <div class="grid two">
-    <div>
-      <label>Čisti otvor / prolaz mm</label>
-      <input id="kliznaOtvor" type="number" inputmode="numeric" placeholder="npr. 4000">
-    </div>
-
-    <div>
-      <label>Visina kapije mm</label>
-      <input id="kliznaVisina" type="number" inputmode="numeric" placeholder="npr. 1800">
-    </div>
-  </div>
-
-  <div class="grid two">
-    <div>
-      <label>Donja cijev – visina profila mm</label>
-      <input id="kliznaDonjaCijev" type="number" inputmode="numeric" placeholder="npr. 80">
-    </div>
-
-    <div>
-      <label>Dužina kapije mm</label>
-      <input id="kliznaDuzina" type="number" inputmode="numeric" placeholder="npr. 5500">
-    </div>
-  </div>
-
-  <div>
-    <label>Prostor u koji kapija odlazi mm</label>
-    <input id="kliznaProstor" type="number" inputmode="numeric" placeholder="npr. 6000">
-  </div>
-</div>
 
       <div class="card kapija-hide">
         <div class="section-title"><span class="num">4</span> Kontrolna lista sa terena</div>
@@ -391,29 +279,26 @@
       <div class="card">
         <div class="section-title"><span class="num">6</span> Slike objekta</div>
         <label>Dodaj / uslikaj objekat</label>
-        <input id="photosInput" type="file" accept="image/*" capture="environment" multiple onchange="handlePhotoFiles(this.files)">
+        <input id="photosInput" type="file" accept="image/*" capture="environment" multiple="" onchange="handlePhotoFiles(this.files)">
         <div class="hint">Slike se umanje i čuvaju u nacrtu na ovom telefonu. Za obradu naloga koristi dugme “Sačuvaj obrazac + slike”.</div>
         <div class="photo-actions">
-          <button type="button" class="light" onclick="document.getElementById('photosInput').click()">Dodaj još slika</button>
+          <button type="button" class="light" onclick="document.getElementById(&#39;photosInput&#39;).click()">Dodaj još slika</button>
           <button type="button" class="danger" onclick="clearPhotos()">Obriši slike</button>
         </div>
         <div id="photoPreview" class="photo-preview"></div>
       </div>
 
       <div class="actions">
-        <button type="button" class="primary" onclick="copyReport()">Kopiraj izvještaj</button>
-        <button type="button" class="secondary" onclick="shareReport()">Podijeli / pošalji</button>
-       <button type="button" class="primary" onclick="sendToAlurol()">Pošalji u ALUROL</button>
-        <button type="button" class="light" onclick="saveDraft()">Sačuvaj nacrt</button>
-        <button type="button" class="light" onclick="downloadFullForm()">Sačuvaj obrazac + slike</button>
+        <button type="button" class="light" onclick="downloadFullForm()">Sačuvaj obrazac i slike</button>
+        <button type="button" class="primary" onclick="sendToAlurol()">Pošalji u ALUROL</button>
         <button type="button" class="danger" onclick="clearForm()">Očisti</button>
       </div>
-    </form>
+    
 
     <div id="output" class="output"></div>
     <div class="footer-note">ALUROL doo – obrazac za mjerenje na terenu</div>
-  </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+<script src="./supabase-js@2"></script>
 <script>
   const SUPABASE_URL = "https://zevvkjwnedtgeabnsfcd.supabase.co";
 const SUPABASE_KEY ="sb_publishable_fgTbRdIIS4nvLJUGI-BF9Q_7Y6qk6lR";
@@ -443,25 +328,13 @@ const val = (id) => document.getElementById(id)?.value?.trim() || "";
       struja: val("struja"),
       demontaza: val("demontaza"),
 
-sirina: (val("tip") !== "Krilna kapija" && val("tip") !== "Klizna kapija")
-  ? val("sirina")
-  : null,
+      sirina: (val("tip") !== "Krilna kapija" && val("tip") !== "Klizna kapija") ? val("sirina") : null,
+      visina: (val("tip") !== "Krilna kapija" && val("tip") !== "Klizna kapija") ? val("visina") : null,
 
-visina: (val("tip") !== "Krilna kapija" && val("tip") !== "Klizna kapija")
-  ? val("visina")
-  : null,
+      sirina_lijevog_krila: val("tip") === "Krilna kapija" ? val("sirina") : null,
+      sirina_desnog_krila: val("tip") === "Krilna kapija" ? val("visina") : null,
+      duzina_kapije: val("tip") === "Klizna kapija" ? val("sirina") : null,
 
-sirina_lijevog_krila: val("tip") === "Krilna kapija"
-  ? val("sirina")
-  : null,
-
-sirina_desnog_krila: val("tip") === "Krilna kapija"
-  ? val("visina")
-  : null,
-
-duzina_kapije: val("tip") === "Klizna kapija"
-  ? val("sirina")
-  : null,
       nadvoj: val("nadvoj"),
       lijevi_spalet: val("lijevi"),
       desni_spalet: val("desni"),
@@ -472,53 +345,12 @@ duzina_kapije: val("tip") === "Klizna kapija"
       mjera_b: val("krilnaB"),
       mjera_c: val("krilnaC"),
 
-      napomena:
-  (val("tip") === "Sekciona garažna vrata HOME X" ||
-   val("tip") === "Sekciona garažna vrata HOME F" ||
-   val("tip") === "Industrijska vrata")
-    ? `Sistem vješanja: ${val("systemVjesanja")}${val("napomena") ? "\n" + val("napomena") : ""}`
-    : val("napomena"),
-      slike: []
+      napomena: isSectionalType()
+        ? (`Sistem vješanja: ${val("systemVjesanja") || "-"}${val("napomena") ? "\n" + val("napomena") : ""}`)
+        : val("napomena"),
+      slike: photos || []
     };
-const imageUrls = [];
 
-const photosToUpload = photos || [];
-
-for (let i = 0; i < photosToUpload.length; i++) {
-  const photoData = photosToUpload[i].slika;
-
-  const response = await fetch(photoData);
-  const blob = await response.blob();
-
-  const extension =
-    blob.type === "image/png" ? "png" :
-    blob.type === "image/webp" ? "webp" :
-    "jpg";
-
-  const fileName =
-    `mjerenje_${Date.now()}_${i}.${extension}`;
-
-  const { error: uploadError } = await supabaseClient.storage
-    .from("mjerenja_slike")
-    .upload(fileName, blob, {
-      contentType: blob.type,
-      upsert: false
-    });
-
-  if (uploadError) {
-    alert("Greška pri slanju slike: " + uploadError.message);
-    console.error(uploadError);
-    return;
-  }
-
-  const { data: publicData } = supabaseClient.storage
-    .from("mjerenja_slike")
-    .getPublicUrl(fileName);
-
-  imageUrls.push(publicData.publicUrl);
-}
-
-payload.slike = imageUrls;
     const { error } = await supabaseClient
       .from("measurements")
       .insert([payload]);
@@ -639,6 +471,12 @@ keyboardFields.forEach((field, index) => {
   function selectedColor(){ return val("boja"); }
   function isKrilnaKapija(){ return val("tip") === "Krilna kapija"; }
   function isKliznaKapija(){ return val("tip") === "Klizna kapija"; }
+  function isSectionalType(){
+    const t = val("tip");
+    return t === "Sekciona garažna vrata HOME X" ||
+           t === "Sekciona garažna vrata HOME F" ||
+           t === "Industrijska vrata";
+  }
   function isKliznaOrKrilnaKapija(){ const t = val("tip"); return t === "Klizna kapija" || t === "Krilna kapija"; }
   function updateMeasureLabels(){
     const sirinaLabel = el("sirinaLabel");
@@ -689,73 +527,34 @@ C mjera: ${val("krilnaC")}
       ["chkPod","chkZid","chkPrepreke","chkSlike"].forEach(id => { const node = el(id); if(node) node.checked = false; });
     }
   }
-  function updateSystemVjesanja(){
+  function updateSectionalFields(){
     const wrap = el("systemVjesanjaWrap");
-    if(!wrap) return;
-
-    const t = val("tip");
-    const prikazi =
-      t === "Sekciona garažna vrata HOME X" ||
-      t === "Sekciona garažna vrata HOME F" ||
-      t === "Industrijska vrata";
-
-    wrap.style.display = prikazi ? "block" : "none";
-
-    const sistem = el("systemVjesanja");
-    if(sistem){
-      sistem.value = prikazi ? (sistem.value || "Standardno") : "";
+    if(wrap) wrap.classList.toggle("show", isSectionalType());
+    if(!isSectionalType()){
+      const s = el("systemVjesanja");
+      if(s) s.value = "";
     }
   }
-
-  function updateKliznaMjere(){
-    const tip = val("tip");
-
-    const kliznaBox = el("kliznaMjereBox");
-    if(kliznaBox){
-      kliznaBox.classList.toggle("show", tip === "Klizna kapija");
-    }
-
-    const standardBox = el("standardMjereBox");
-    if(standardBox){
-      standardBox.style.display =
-        (tip === "Klizna kapija" || tip === "Krilna kapija") ? "none" : "block";
-    }
-  }
-
-  function updateConditionalFields(){
-    const tip = val("tip");
-    const kapija = tip === "Klizna kapija" || tip === "Krilna kapija";
-
-    const doorOptionsBox = el("doorOptionsBox");
-    if(doorOptionsBox){
-      doorOptionsBox.style.display = kapija ? "none" : "block";
-    }
-
-    toggleKrilnaKapija();
-    updateMeasureLabels();
-    updateSystemVjesanja();
-    updateKliznaMjere();
-  }
-
-function makeReport(){
-  const kapija = isKliznaOrKrilnaKapija();
-
-  const proizvodExtra = kapija
-    ? `Motor: ${val("motor")}
+  function updateConditionalFields(){ toggleKrilnaKapija(); toggleKapijaFields(); updateMeasureLabels(); updateSectionalFields(); }
+  function makeReport(){
+    const kapija = isKliznaOrKrilnaKapija();
+    const proizvodExtra = kapija
+      ? `Motor: ${val("motor")}
 Struja dovedena: ${val("struja")}`
-    : `Boja: ${selectedColor()}
+      : `Boja: ${selectedColor()}
 Motor: ${val("motor")}
+${isSectionalType() ? `Sistem vješanja: ${val("systemVjesanja")}` : ""}
 Struja dovedena: ${val("struja")}
 Demontaža starih vrata: ${val("demontaza")}`;
-
-  const mjereExtra = kapija
-    ? ""
-    : `Nadvoj: ${val("nadvoj")} mm
+    const mjereExtra = kapija
+      ? ""
+      : `Nadvoj: ${val("nadvoj")} mm
 Lijevi špalet: ${val("lijevi")} mm
 Desni špalet: ${val("desni")} mm
 Dubina prostora: ${val("dubina")} mm
 Visina plafona: ${val("plafon")} mm
-`;    const kontrolna = kapija
+`;
+    const kontrolna = kapija
       ? ""
       : `
 KONTROLNA LISTA:
@@ -940,9 +739,126 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
   }
   function setToday(){ const d = el("datum"); if(d && !d.value) d.value = new Date().toISOString().split("T")[0]; }
   function setDefaultWorker(){ const r = el("radnik"); if(r && !r.value) r.value = "Mijatović Draško"; }
+
+  let archiveData = [];
+
+  function showNewMeasurement(){
+    el("archiveView")?.classList.add("view-hidden");
+    el("measurementForm")?.classList.remove("view-hidden");
+    document.querySelector(".actions")?.classList.remove("view-hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function showArchive(){
+    el("measurementForm")?.classList.add("view-hidden");
+    document.querySelector(".actions")?.classList.add("view-hidden");
+    el("archiveView")?.classList.remove("view-hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    await loadArchive();
+  }
+
+  async function loadArchive(){
+    const list = el("archiveList");
+    if(list) list.innerHTML = '<div class="archive-empty">Učitavanje...</div>';
+
+    const { data, error } = await supabaseClient.from("measurements").select("*").limit(200);
+
+    if(error){
+      if(list) list.innerHTML = `<div class="archive-empty">Greška pri učitavanju: ${escapeHtml(error.message)}</div>`;
+      return;
+    }
+
+    archiveData = Array.isArray(data) ? data : [];
+    archiveData.sort((a,b) => String(b.datum_mjerenja || b.created_at || "").localeCompare(String(a.datum_mjerenja || a.created_at || "")));
+    renderArchive();
+  }
+
+  function archiveMeasureSummary(m){
+    const tip = m.tip_proizvoda || "";
+    if(tip === "Krilna kapija"){
+      return `Lijevo krilo: ${m.sirina_lijevog_krila || "-"} mm · Desno krilo: ${m.sirina_desnog_krila || "-"} mm`;
+    }
+    if(tip === "Klizna kapija"){
+      return `Dužina kapije: ${m.duzina_kapije || "-"} mm`;
+    }
+    return `Širina: ${m.sirina || "-"} mm · Visina: ${m.visina || "-"} mm`;
+  }
+
+  function renderArchive(){
+    const list = el("archiveList");
+    if(!list) return;
+    const q = (el("archiveSearch")?.value || "").trim().toLowerCase();
+    const items = archiveData.filter(m => String(m.kupac || "").toLowerCase().includes(q));
+
+    if(!items.length){
+      list.innerHTML = '<div class="archive-empty">Nema mjerenja za prikaz.</div>';
+      return;
+    }
+
+    list.innerHTML = items.map((m) => {
+      const realIndex = archiveData.indexOf(m);
+      const detailsId = `archive-details-${realIndex}`;
+      const slike = Array.isArray(m.slike) ? m.slike : [];
+      return `
+        <div class="archive-item">
+          <div class="archive-item-title">${escapeHtml(m.kupac || "Bez naziva kupca")}</div>
+          <div class="archive-item-meta">
+            ${escapeHtml(m.datum_mjerenja || "")}<br>
+            ${escapeHtml(m.tip_proizvoda || "")}<br>
+            ${escapeHtml(archiveMeasureSummary(m))}
+          </div>
+          <div class="archive-item-actions">
+            <button type="button" class="light" onclick="toggleArchiveDetails('${detailsId}')">PREGLEDAJ</button>
+            <button type="button" class="danger" onclick="deleteMeasurement(${realIndex})">IZBRIŠI</button>
+          </div>
+          <div id="${detailsId}" class="archive-details">
+            <div class="archive-details-row"><b>Telefon:</b> ${escapeHtml(m.telefon || "-")}</div>
+            <div class="archive-details-row"><b>Mjesto:</b> ${escapeHtml(m.mjesto || "-")}</div>
+            <div class="archive-details-row"><b>Adresa:</b> ${escapeHtml(m.adresa || "-")}</div>
+            <div class="archive-details-row"><b>Tip:</b> ${escapeHtml(m.tip_proizvoda || "-")}</div>
+            <div class="archive-details-row"><b>Mjere:</b> ${escapeHtml(archiveMeasureSummary(m))}</div>
+            ${m.nadvoj ? `<div class="archive-details-row"><b>Nadvoj:</b> ${escapeHtml(m.nadvoj)} mm</div>` : ""}
+            ${m.lijevi_spalet ? `<div class="archive-details-row"><b>Lijeva špaleta:</b> ${escapeHtml(m.lijevi_spalet)} mm</div>` : ""}
+            ${m.desni_spalet ? `<div class="archive-details-row"><b>Desna špaleta:</b> ${escapeHtml(m.desni_spalet)} mm</div>` : ""}
+            ${m.dubina_prostora ? `<div class="archive-details-row"><b>Dubina prostora:</b> ${escapeHtml(m.dubina_prostora)} mm</div>` : ""}
+            ${m.motor ? `<div class="archive-details-row"><b>Motor:</b> ${escapeHtml(m.motor)}</div>` : ""}
+            ${m.boja ? `<div class="archive-details-row"><b>Boja:</b> ${escapeHtml(m.boja)}</div>` : ""}
+            ${m.napomena ? `<div class="archive-details-row"><b>Napomena:</b><br>${escapeHtml(m.napomena).replace(/\n/g,"<br>")}</div>` : ""}
+            ${slike.length ? `<div class="archive-details-row"><b>Slike:</b> ${slike.length}</div>` : ""}
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  function toggleArchiveDetails(id){
+    el(id)?.classList.toggle("show");
+  }
+
+  async function deleteMeasurement(index){
+    const m = archiveData[index];
+    if(!m) return;
+    if(!confirm(`Trajno izbrisati mjerenje za kupca "${m.kupac || ""}"?`)) return;
+
+    if(m.id === undefined || m.id === null){
+      alert("Ovo mjerenje nema ID i ne može se sigurno izbrisati.");
+      return;
+    }
+
+    const { error } = await supabaseClient.from("measurements").delete().eq("id", m.id);
+    if(error){
+      alert("Brisanje nije uspjelo: " + error.message);
+      return;
+    }
+
+    archiveData.splice(index, 1);
+    renderArchive();
+    alert("Mjerenje je izbrisano.");
+  }
+
   const tipSelect = el("tip");
   if(tipSelect) tipSelect.addEventListener("change", updateConditionalFields);
-  setToday(); setDefaultWorker(); updateConditionalFields();
+  setToday(); setDefaultWorker(); updateConditionalFields(); showNewMeasurement();
 </script>
-</body>
-</html>
+
+
+</body></html>
