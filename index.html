@@ -921,10 +921,13 @@
       const photosToUpload = photos || [];
 
       for (let i = 0; i < photosToUpload.length; i++) {
-        const photoData = photosToUpload[i].dataUrl;
-        console.log("PHOTO DATA:", photoData);
-        const response = await fetch(photoData);
-        const blob = await response.blob();
+        const item = photosToUpload[i];
+const photoData = item.dataUrl;
+
+const blob =
+  item.file && item.type && item.type.startsWith("video/")
+    ? item.file
+    : await (await fetch(photoData)).blob();
 
         const extension =
   blob.type === "image/png" ? "png" :
@@ -1284,6 +1287,7 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
     photos.push({
       name: file.name || `video-${Date.now()}.mp4`,
       dataUrl,
+      file,
       type: file.type,
       createdAt: new Date().toISOString()
     });
