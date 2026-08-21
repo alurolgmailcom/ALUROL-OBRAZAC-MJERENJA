@@ -258,6 +258,7 @@
         <div class="grid two">
           <div class="kapija-hide"><label>Dubina prostora mm</label><input id="dubina" type="number" inputmode="numeric"></div>
           <div class="kapija-hide"><label>Visina plafona mm</label><input id="plafon" type="number" inputmode="numeric"></div>
+          <div class="kapija-hide"><label>Proizvodna mjera mm</label><input id="proizvodnaMjera" type="number" inputmode="numeric"></div>
         </div>
         <div class="hint kapija-hide">Obavezno provjeri lijevi/desni špalet, nadvoj i dubinu prostora prije slanja mjerenja.</div>
       </div>
@@ -467,6 +468,7 @@ duzina_kapije: val("tip") === "Klizna kapija"
       desni_spalet: val("desni"),
       dubina_prostora: val("dubina"),
       visina_plafona: val("plafon"),
+      proizvodna_mjera: val("proizvodnaMjera"),
 
       mjera_a: val("krilnaA"),
       mjera_b: val("krilnaB"),
@@ -631,7 +633,7 @@ keyboardFields.forEach((field, index) => {
     );
   }
 });
-  const ids = ["datum","radnik","kupac","telefon","mjesto","adresa","tip","boja","motor","systemVjesanja","struja","demontaza","krilnaSmjer","krilnaUgao","krilnaA","krilnaB","krilnaC","sirina","visina","nadvoj","lijevi","desni","dubina","plafon","napomena","chkPod","chkZid","chkPrepreke","chkSlike"];
+  const ids = ["datum","radnik","kupac","telefon","mjesto","adresa","tip","boja","motor","systemVjesanja","struja","demontaza","krilnaSmjer","krilnaUgao","krilnaA","krilnaB","krilnaC","sirina","visina","nadvoj","lijevi","desni","dubina","plafon","proizvodnaMjera","napomena","chkPod","chkZid","chkPrepreke","chkSlike"];
   const draftKey = "alurol_mjerenje_draft_v3_photos";
   let photos = [];
   function el(id){ return document.getElementById(id); }
@@ -755,6 +757,7 @@ Lijevi špalet: ${val("lijevi")} mm
 Desni špalet: ${val("desni")} mm
 Dubina prostora: ${val("dubina")} mm
 Visina plafona: ${val("plafon")} mm
+Proizvodna mjera: ${val("proizvodnaMjera")} mm
 `;    const kontrolna = kapija
       ? ""
       : `
