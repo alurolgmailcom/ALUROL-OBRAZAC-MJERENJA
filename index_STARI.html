@@ -82,7 +82,8 @@
   <div class="wrap">
     <div class="header">
       <div class="brand">
-        <h1>ALUROL – OBRAZAC ZA MJERENJE</h1>
+        <h1>TEST
+        </h1>
         <div class="badge">TEREN / MOBILNI UNOS</div>
       </div>
       <div class="sub">Popuni na telefonu. Na kraju klikni “Kopiraj izvještaj” ili “Podijeli / pošalji”. Fotografije možeš uslikati i sačuvati zajedno sa obrascem.</div>
@@ -118,64 +119,29 @@
           <option>Motor za kapiju</option>
           <option>Ostalo</option>
         </select>
-        <div id="doorOptionsBox">
-          <div class="grid two">
-            <div>
-              <label>Boja</label>
-              <select id="boja">
-                <option></option>
-                <option>Antracit</option>
-                <option>Silver</option>
-                <option>Bijela</option>
-                <option>Braon</option>
-                <option>Golden Oak</option>
-              </select>
-            </div>
+        <div class="grid two">
+          <div class="kapija-hide">
+            <label>Boja</label>
+            <select id="boja">
+              <option></option><option>Antracit</option><option>Silver</option><option>Bijela</option><option>Braon</option><option>Golden Oak</option>
+            </select>
           </div>
-
-          <div class="grid two">
-            <div>
-              <label>Motor</label>
-              <select id="motor">
-                <option></option>
-                <option>Lijevo</option>
-                <option>Desno</option>
-                <option>Plafon</option>
-              </select>
-            </div>
-
-            <div id="systemVjesanjaWrap">
-              <label>Sistem vješanja</label>
-              <select id="systemVjesanja">
-                <option value="Standardno" selected>Standardno</option>
-                <option value="Povišeno">Povišeno</option>
-                <option value="Vertikalno">Vertikalno</option>
-                <option value="Nisko">Nisko</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid two">
-            <div>
-              <label>Struja dovedena</label>
-              <select id="struja">
-                <option></option>
-                <option>DA</option>
-                <option>NE</option>
-                <option>Ne znam</option>
-              </select>
-            </div>
-
-            <div>
-              <label>Demontaža starih vrata</label>
-              <select id="demontaza">
-                <option></option>
-                <option>DA</option>
-                <option>NE</option>
-                <option>Nema starih vrata</option>
-              </select>
-            </div>
-          </div>
+        </div>
+        <div class="grid two">
+          <div class="kapija-hide"><label>Motor</label>
+       <div
+<div id="systemVjesanjaWrap" class="kapija-hide"></div>
+  <label>Sistem vješanja</label>
+  <select id="systemVjesanja">
+    <option value="Standardno" selected>Standardno</option>
+    <option value="Povišeno">Povišeno</option>
+    <option value="Vertikalno">Vertikalno</option>
+    <option value="Nisko">Nisko</option>
+  </select>
+<div class="kapija-hide"><label>Struja dovedena</label>
+        </div>
+        <div class="grid two">
+          <div class="kapija-hide"><label>Demontaža starih vrata</label><select id="demontaza"><option></option><option>DA</option><option>NE</option><option>Nema starih vrata</option></select></div>
         </div>
       </div>
 
@@ -242,7 +208,7 @@
         </div>
       </div>
 
-      <div id="standardMjereBox" class="card">
+      <div id="standardMjereBox" class="card"><
         <div class="section-title"><span class="num">3</span> Mjere u milimetrima</div>
         <div class="measure-box">
           <div class="grid two">
@@ -258,11 +224,10 @@
         <div class="grid two">
           <div class="kapija-hide"><label>Dubina prostora mm</label><input id="dubina" type="number" inputmode="numeric"></div>
           <div class="kapija-hide"><label>Visina plafona mm</label><input id="plafon" type="number" inputmode="numeric"></div>
-          <div class="kapija-hide"><label>Proizvodna mjera mm</label><input id="proizvodnaMjera" type="number" inputmode="numeric"></div>
         </div>
         <div class="hint kapija-hide">Obavezno provjeri lijevi/desni špalet, nadvoj i dubinu prostora prije slanja mjerenja.</div>
       </div>
-      <div id="kliznaMjereBox" class="card gate-extra">
+      <div id="kliznaMjereBox" class="card gate-extra show">
   <div class="section-title"><span class="num">K</span> Mjerenje klizne kapije</div>
 <div style="margin:14px 0 18px;padding:10px;border:1px solid #d7dce2;border-radius:12px;background:#fff;">
   <svg viewBox="0 0 900 390" style="width:100%;height:auto;display:block;" aria-label="Skica klizne kapije">
@@ -468,7 +433,6 @@ duzina_kapije: val("tip") === "Klizna kapija"
       desni_spalet: val("desni"),
       dubina_prostora: val("dubina"),
       visina_plafona: val("plafon"),
-      proizvodna_mjera: val("proizvodnaMjera"),
 
       mjera_a: val("krilnaA"),
       mjera_b: val("krilnaB"),
@@ -480,47 +444,9 @@ duzina_kapije: val("tip") === "Klizna kapija"
    val("tip") === "Industrijska vrata")
     ? `Sistem vješanja: ${val("systemVjesanja")}${val("napomena") ? "\n" + val("napomena") : ""}`
     : val("napomena"),
-      slike: []
+      slike: window.savedPhotos || []
     };
-const imageUrls = [];
 
-const photosToUpload = photos || [];
-
-for (let i = 0; i < photosToUpload.length; i++) {
-  const photoData = photosToUpload[i].dataUrl;
-
-  const response = await fetch(photoData);
-  const blob = await response.blob();
-
-  const extension =
-    blob.type === "image/png" ? "png" :
-    blob.type === "image/webp" ? "webp" :
-    "jpg";
-
-  const fileName =
-    `mjerenje_${Date.now()}_${i}.${extension}`;
-
-  const { error: uploadError } = await supabaseClient.storage
-    .from("mjerenja_slike")
-    .upload(fileName, blob, {
-      contentType: blob.type,
-      upsert: false
-    });
-
-  if (uploadError) {
-    alert("Greška pri slanju slike: " + uploadError.message);
-    console.error(uploadError);
-    return;
-  }
-
-  const { data: publicData } = supabaseClient.storage
-    .from("mjerenja_slike")
-    .getPublicUrl(fileName);
-
-  imageUrls.push(publicData.publicUrl);
-}
-
-payload.slike = imageUrls;
     const { error } = await supabaseClient
       .from("measurements")
       .insert([payload]);
@@ -633,7 +559,7 @@ keyboardFields.forEach((field, index) => {
     );
   }
 });
-  const ids = ["datum","radnik","kupac","telefon","mjesto","adresa","tip","boja","motor","systemVjesanja","struja","demontaza","krilnaSmjer","krilnaUgao","krilnaA","krilnaB","krilnaC","sirina","visina","nadvoj","lijevi","desni","dubina","plafon","proizvodnaMjera","napomena","chkPod","chkZid","chkPrepreke","chkSlike"];
+  const ids = ["datum","radnik","kupac","telefon","mjesto","adresa","tip","boja","motor","systemVjesanja","struja","demontaza","krilnaSmjer","krilnaUgao","krilnaA","krilnaB","krilnaC","sirina","visina","nadvoj","lijevi","desni","dubina","plafon","napomena","chkPod","chkZid","chkPrepreke","chkSlike"];
   const draftKey = "alurol_mjerenje_draft_v3_photos";
   let photos = [];
   function el(id){ return document.getElementById(id); }
@@ -692,53 +618,45 @@ C mjera: ${val("krilnaC")}
     }
   }
   function updateSystemVjesanja(){
-    const wrap = el("systemVjesanjaWrap");
-    if(!wrap) return;
+  const wrap = el("systemVjesanjaWrap");
+  if(!wrap) return;
 
-    const t = val("tip");
-    const prikazi =
-      t === "Sekciona garažna vrata HOME X" ||
-      t === "Sekciona garažna vrata HOME F" ||
-      t === "Industrijska vrata";
+  const t = val("tip");
+  const prikazi =
+    t === "Sekciona garažna vrata HOME X" ||
+    t === "Sekciona garažna vrata HOME F" ||
+    t === "Industrijska vrata";
 
-    wrap.style.display = prikazi ? "block" : "none";
+  wrap.style.display = prikazi ? "block" : "none";
 
-    const sistem = el("systemVjesanja");
-    if(sistem){
-      sistem.value = prikazi ? (sistem.value || "Standardno") : "";
-    }
+  const sistem = el("systemVjesanja");
+  if(sistem){
+    sistem.value = prikazi ? (sistem.value || "Standardno") : "";
+  }
+}
+function updateKliznaMjere(){
+  const tip = val("tip");
+
+  const kliznaBox = el("kliznaMjereBox");
+  if(kliznaBox){
+    kliznaBox.classList.toggle("show", tip === "Klizna kapija");
   }
 
-  function updateKliznaMjere(){
-    const tip = val("tip");
-
-    const kliznaBox = el("kliznaMjereBox");
-    if(kliznaBox){
-      kliznaBox.classList.toggle("show", tip === "Klizna kapija");
-    }
-
-    const standardBox = el("standardMjereBox");
-    if(standardBox){
-      standardBox.style.display =
-        (tip === "Klizna kapija" || tip === "Krilna kapija") ? "none" : "block";
-    }
+  const standardBox = el("standardMjereBox");
+  if(standardBox){
+    standardBox.style.display =
+      (tip === "Klizna kapija" || tip === "Krilna kapija")
+        ? "none"
+        : "block";
   }
-
-  function updateConditionalFields(){
-    const tip = val("tip");
-    const kapija = tip === "Klizna kapija" || tip === "Krilna kapija";
-
-    const doorOptionsBox = el("doorOptionsBox");
-    if(doorOptionsBox){
-      doorOptionsBox.style.display = kapija ? "none" : "block";
-    }
-
-    toggleKrilnaKapija();
-    updateMeasureLabels();
-    updateSystemVjesanja();
-    updateKliznaMjere();
-  }
-
+}
+function updateConditionalFields(){
+  toggleKrilnaKapija();
+  toggleKapijaFields();
+  updateMeasureLabels();
+  updateSystemVjesanja();
+  updateKliznaMjere();
+}
 function makeReport(){
   const kapija = isKliznaOrKrilnaKapija();
 
@@ -757,7 +675,6 @@ Lijevi špalet: ${val("lijevi")} mm
 Desni špalet: ${val("desni")} mm
 Dubina prostora: ${val("dubina")} mm
 Visina plafona: ${val("plafon")} mm
-Proizvodna mjera: ${val("proizvodnaMjera")} mm
 `;    const kontrolna = kapija
       ? ""
       : `

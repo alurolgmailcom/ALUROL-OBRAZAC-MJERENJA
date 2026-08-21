@@ -1,11 +1,11 @@
-<!doctype html>
-<html lang="bs">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="favicon.png">
-<link rel="apple-touch-icon" href="icon-512.png">
-<link rel="manifest" href="manifest.json">
+<!DOCTYPE html>
+<!-- saved from url=(0040)https://web-sandbox.oaiusercontent.com/? -->
+<html lang="bs"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="https://web-sandbox.oaiusercontent.com/favicon.png">
+<link rel="apple-touch-icon" href="https://web-sandbox.oaiusercontent.com/icon-512.png">
+<link rel="manifest" href="https://web-sandbox.oaiusercontent.com/manifest.json">
 
   <title>ALUROL – Obrazac za mjerenje</title>
   <style>
@@ -77,7 +77,7 @@
     .gate-measures{margin-top:12px;border-top:1px solid var(--border);padding-top:10px;}
     .gate-note{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.35;}
   </style>
-</head>
+<style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:transparent}html.chatgptOled.dark,html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.desktopSkybridge [data-openai-titlebar]{padding-left:calc(8px + var(--openai-titlebar-left-inset, 0px));padding-right:8px}html.transparentSkybridgeBackground,html.transparentSkybridgeBackground.dark{background-color:transparent}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style></head>
 <body>
   <div class="wrap">
     <div class="header">
@@ -92,21 +92,21 @@
       <div class="card">
         <div class="section-title"><span class="num">1</span> Podaci kupca</div>
         <div class="grid two">
-          <div><label>Datum mjerenja</label><input id="datum" type="date"></div>
-          <div><label>Radnik koji je mjerio</label><input id="radnik" type="text" value="Mijatović Draško" placeholder="Ime radnika"></div>
+          <div><label>Datum mjerenja</label><input id="datum" type="date" enterkeyhint="next"></div>
+          <div><label>Radnik koji je mjerio</label><input id="radnik" type="text" value="Mijatović Draško" placeholder="Ime radnika" enterkeyhint="next"></div>
         </div>
-        <label class="req">Kupac / firma</label><input id="kupac" type="text" required>
+        <label class="req">Kupac / firma</label><input id="kupac" type="text" required="" enterkeyhint="next">
         <div class="grid two">
-          <div><label class="req">Telefon</label><input id="telefon" type="tel" required></div>
-          <div><label>Mjesto</label><input id="mjesto" type="text"></div>
+          <div><label class="req">Telefon</label><input id="telefon" type="tel" required="" enterkeyhint="next"></div>
+          <div><label>Mjesto</label><input id="mjesto" type="text" enterkeyhint="next"></div>
         </div>
-        <label>Adresa mjerenja</label><input id="adresa" type="text">
+        <label>Adresa mjerenja</label><input id="adresa" type="text" enterkeyhint="next">
       </div>
 
       <div class="card">
         <div class="section-title"><span class="num">2</span> Proizvod i oprema</div>
         <label class="req">Tip proizvoda</label>
-        <select id="tip" required>
+        <select id="tip" required="" enterkeyhint="next">
           <option value="">Odaberi tip proizvoda</option>
           <option>Sekciona garažna vrata HOME X</option>
           <option>Sekciona garažna vrata HOME F</option>
@@ -118,63 +118,55 @@
           <option>Motor za kapiju</option>
           <option>Ostalo</option>
         </select>
-        <div id="doorOptionsBox">
-          <div class="grid two">
-            <div>
-              <label>Boja</label>
-              <select id="boja">
-                <option></option>
-                <option>Antracit</option>
-                <option>Silver</option>
-                <option>Bijela</option>
-                <option>Braon</option>
-                <option>Golden Oak</option>
-              </select>
-            </div>
+        <div class="grid two">
+          <div class="kapija-hide">
+            <label>Boja</label>
+            <select id="boja" enterkeyhint="next">
+              <option></option><option>Antracit</option><option>Silver</option><option>Bijela</option><option>Braon</option><option>Golden Oak</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="kapija-hide">
+            <label>Motor</label>
+            <select id="motor" enterkeyhint="next">
+              <option></option>
+              <option>Lijevo</option>
+              <option>Desno</option>
+              <option>Plafon</option>
+            </select>
           </div>
 
-          <div class="grid two">
-            <div>
-              <label>Motor</label>
-              <select id="motor">
-                <option></option>
-                <option>Lijevo</option>
-                <option>Desno</option>
-                <option>Plafon</option>
-              </select>
-            </div>
+          <div id="systemVjesanjaWrap" class="kapija-hide" style="display: none;">
+            <label>Sistem vješanja</label>
+            <select id="systemVjesanja" enterkeyhint="next">
+              <option value="Standardno" selected="">Standardno</option>
+              <option value="Povišeno">Povišeno</option>
+              <option value="Vertikalno">Vertikalno</option>
+              <option value="Nisko">Nisko</option>
+            </select>
+          </div>
+        </div>
 
-            <div id="systemVjesanjaWrap">
-              <label>Sistem vješanja</label>
-              <select id="systemVjesanja">
-                <option value="Standardno" selected>Standardno</option>
-                <option value="Povišeno">Povišeno</option>
-                <option value="Vertikalno">Vertikalno</option>
-                <option value="Nisko">Nisko</option>
-              </select>
-            </div>
+        <div class="grid two">
+          <div class="kapija-hide">
+            <label>Struja dovedena</label>
+            <select id="struja" enterkeyhint="next">
+              <option></option>
+              <option>DA</option>
+              <option>NE</option>
+              <option>Ne znam</option>
+            </select>
           </div>
 
-          <div class="grid two">
-            <div>
-              <label>Struja dovedena</label>
-              <select id="struja">
-                <option></option>
-                <option>DA</option>
-                <option>NE</option>
-                <option>Ne znam</option>
-              </select>
-            </div>
-
-            <div>
-              <label>Demontaža starih vrata</label>
-              <select id="demontaza">
-                <option></option>
-                <option>DA</option>
-                <option>NE</option>
-                <option>Nema starih vrata</option>
-              </select>
-            </div>
+          <div class="kapija-hide">
+            <label>Demontaža starih vrata</label>
+            <select id="demontaza" enterkeyhint="next">
+              <option></option>
+              <option>DA</option>
+              <option>NE</option>
+              <option>Nema starih vrata</option>
+            </select>
           </div>
         </div>
       </div>
@@ -186,45 +178,45 @@
           <div class="gate-diagram">
             <div class="gate-diagram-title">OTVARANJE PREMA UNUTRA</div>
             <svg viewBox="0 0 520 220" role="img" aria-label="Krilna kapija otvaranje prema unutra A B C">
-              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
-              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
+              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"></rect>
+              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"></rect>
               <text x="49" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
               <text x="471" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
-              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"/>
-              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"/>
-              <line x1="88" y1="151" x2="225" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
-              <line x1="432" y1="151" x2="295" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
-              <path d="M86 150 Q120 205 188 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
-              <path d="M434 150 Q400 205 332 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
-              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr1)"/>
+              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"></line>
+              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"></line>
+              <line x1="88" y1="151" x2="225" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"></line>
+              <line x1="432" y1="151" x2="295" y2="176" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"></line>
+              <path d="M86 150 Q120 205 188 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"></path>
+              <path d="M434 150 Q400 205 332 205" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"></path>
+              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr1)"></line>
               <text x="95" y="62" text-anchor="middle" font-size="16" font-weight="800">A</text>
-              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr1)"/>
+              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr1)"></line>
               <text x="10" y="130" text-anchor="middle" font-size="16" font-weight="800" transform="rotate(-90 10 130)">B</text>
-              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr1)"/>
+              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr1)"></line>
               <text x="151" y="96" text-anchor="middle" font-size="16" font-weight="800">C</text>
-              <defs><marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"/></marker></defs>
+              <defs><marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"></path></marker></defs>
             </svg>
           </div>
           <div class="gate-diagram">
             <div class="gate-diagram-title">OTVARANJE PREMA VAN</div>
             <svg viewBox="0 0 520 220" role="img" aria-label="Krilna kapija otvaranje prema van A B C">
-              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
-              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"/>
+              <rect x="25" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"></rect>
+              <rect x="447" y="82" width="48" height="88" rx="5" fill="#facc15" stroke="#111"></rect>
               <text x="49" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
               <text x="471" y="130" text-anchor="middle" font-size="13" font-weight="700">STUB</text>
-              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"/>
-              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"/>
-              <line x1="88" y1="151" x2="225" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
-              <line x1="432" y1="151" x2="295" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"/>
-              <path d="M86 150 Q110 42 190 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
-              <path d="M434 150 Q410 42 330 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"/>
-              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr2)"/>
+              <line x1="73" y1="126" x2="260" y2="126" stroke="#d97706" stroke-width="8"></line>
+              <line x1="260" y1="126" x2="447" y2="126" stroke="#d97706" stroke-width="8"></line>
+              <line x1="88" y1="151" x2="225" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"></line>
+              <line x1="432" y1="151" x2="295" y2="151" stroke="#f59e0b" stroke-width="14" stroke-linecap="round"></line>
+              <path d="M86 150 Q110 42 190 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"></path>
+              <path d="M434 150 Q410 42 330 42" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 5"></path>
+              <line x1="73" y1="70" x2="116" y2="70" stroke="#111" stroke-width="2" marker-end="url(#arr2)"></line>
               <text x="95" y="62" text-anchor="middle" font-size="16" font-weight="800">A</text>
-              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr2)"/>
+              <line x1="18" y1="82" x2="18" y2="170" stroke="#111" stroke-width="2" marker-end="url(#arr2)"></line>
               <text x="10" y="130" text-anchor="middle" font-size="16" font-weight="800" transform="rotate(-90 10 130)">B</text>
-              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr2)"/>
+              <line x1="88" y1="105" x2="215" y2="105" stroke="#111" stroke-width="2" marker-end="url(#arr2)"></line>
               <text x="151" y="96" text-anchor="middle" font-size="16" font-weight="800">C</text>
-              <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"/></marker></defs>
+              <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#111"></path></marker></defs>
             </svg>
           </div>
         </div>
@@ -242,23 +234,22 @@
         </div>
       </div>
 
-      <div id="standardMjereBox" class="card">
+      <div id="standardMjereBox" class="card" style="display: block;">
         <div class="section-title"><span class="num">3</span> Mjere u milimetrima</div>
         <div class="measure-box">
           <div class="grid two">
-            <div id="sirinaWrap"><label id="sirinaLabel" class="req">Širina otvora mm</label><input id="sirina" type="number" inputmode="numeric" placeholder="npr. 3000" required></div>
-            <div id="visinaWrap"><label id="visinaLabel" class="req">Visina otvora mm</label><input id="visina" type="number" inputmode="numeric" placeholder="npr. 2250" required></div>
+            <div id="sirinaWrap"><label id="sirinaLabel" class="req">Širina otvora mm</label><input id="sirina" type="number" inputmode="numeric" placeholder="npr. 3000" required="" enterkeyhint="next"></div>
+            <div id="visinaWrap" style="display: block;"><label id="visinaLabel" class="req">Visina otvora mm</label><input id="visina" type="number" inputmode="numeric" placeholder="npr. 2250" required="" enterkeyhint="next"></div>
           </div>
         </div>
         <div class="grid three">
-          <div class="kapija-hide"><label>Nadvoj mm</label><input id="nadvoj" type="number" inputmode="numeric"></div>
-          <div class="kapija-hide"><label>Lijevi špalet mm</label><input id="lijevi" type="number" inputmode="numeric"></div>
-          <div class="kapija-hide"><label>Desni špalet mm</label><input id="desni" type="number" inputmode="numeric"></div>
+          <div class="kapija-hide"><label>Nadvoj mm</label><input id="nadvoj" type="number" inputmode="numeric" enterkeyhint="next"></div>
+          <div class="kapija-hide"><label>Lijevi špalet mm</label><input id="lijevi" type="number" inputmode="numeric" enterkeyhint="next"></div>
+          <div class="kapija-hide"><label>Desni špalet mm</label><input id="desni" type="number" inputmode="numeric" enterkeyhint="next"></div>
         </div>
         <div class="grid two">
-          <div class="kapija-hide"><label>Dubina prostora mm</label><input id="dubina" type="number" inputmode="numeric"></div>
-          <div class="kapija-hide"><label>Visina plafona mm</label><input id="plafon" type="number" inputmode="numeric"></div>
-          <div class="kapija-hide"><label>Proizvodna mjera mm</label><input id="proizvodnaMjera" type="number" inputmode="numeric"></div>
+          <div class="kapija-hide"><label>Dubina prostora mm</label><input id="dubina" type="number" inputmode="numeric" enterkeyhint="next"></div>
+          <div class="kapija-hide"><label>Visina plafona mm</label><input id="plafon" type="number" inputmode="numeric" enterkeyhint="next"></div>
         </div>
         <div class="hint kapija-hide">Obavezno provjeri lijevi/desni špalet, nadvoj i dubinu prostora prije slanja mjerenja.</div>
       </div>
@@ -268,76 +259,54 @@
   <svg viewBox="0 0 900 390" style="width:100%;height:auto;display:block;" aria-label="Skica klizne kapije">
 
     <!-- stubovi -->
-    <rect x="45" y="70" width="55" height="245" rx="3"
-          fill="#e5e7eb" stroke="#111827" stroke-width="4"/>
-    <rect x="610" y="70" width="55" height="245" rx="3"
-          fill="#e5e7eb" stroke="#111827" stroke-width="4"/>
+    <rect x="45" y="70" width="55" height="245" rx="3" fill="#e5e7eb" stroke="#111827" stroke-width="4"></rect>
+    <rect x="610" y="70" width="55" height="245" rx="3" fill="#e5e7eb" stroke="#111827" stroke-width="4"></rect>
 
     <!-- okvir kapije - kvadratna cijev -->
-    <rect x="100" y="105" width="510" height="190"
-          fill="none" stroke="#111827" stroke-width="18"/>
+    <rect x="100" y="105" width="510" height="190" fill="none" stroke="#111827" stroke-width="18"></rect>
 
     <!-- srednja vertikala -->
-    <line x1="355" y1="105" x2="355" y2="295"
-          stroke="#111827" stroke-width="14"/>
+    <line x1="355" y1="105" x2="355" y2="295" stroke="#111827" stroke-width="14"></line>
 
     <!-- produžetak / kontra teg -->
-    <line x1="610" y1="105" x2="800" y2="295"
-          stroke="#111827" stroke-width="14"/>
-    <line x1="610" y1="295" x2="800" y2="295"
-          stroke="#111827" stroke-width="18"/>
+    <line x1="610" y1="105" x2="800" y2="295" stroke="#111827" stroke-width="14"></line>
+    <line x1="610" y1="295" x2="800" y2="295" stroke="#111827" stroke-width="18"></line>
 
     <!-- donja vodilica -->
-    <line x1="90" y1="325" x2="820" y2="325"
-          stroke="#6b7280" stroke-width="6"/>
+    <line x1="90" y1="325" x2="820" y2="325" stroke="#6b7280" stroke-width="6"></line>
 
     <!-- čisti otvor -->
-    <line x1="100" y1="45" x2="610" y2="45"
-          stroke="#16a34a" stroke-width="4"/>
-    <path d="M100 45 l18 -9 v18 z M610 45 l-18 -9 v18 z"
-          fill="#16a34a"/>
-    <text x="355" y="30" text-anchor="middle"
-          font-size="20" font-weight="700" fill="#15803d">
+    <line x1="100" y1="45" x2="610" y2="45" stroke="#16a34a" stroke-width="4"></line>
+    <path d="M100 45 l18 -9 v18 z M610 45 l-18 -9 v18 z" fill="#16a34a"></path>
+    <text x="355" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#15803d">
       ČISTI OTVOR / PROLAZ
     </text>
 
     <!-- visina -->
-    <line x1="125" y1="115" x2="125" y2="285"
-          stroke="#2563eb" stroke-width="4"/>
-    <path d="M125 115 l-9 18 h18 z M125 285 l-9 -18 h18 z"
-          fill="#2563eb"/>
-    <text x="145" y="205"
-          font-size="19" font-weight="700" fill="#2563eb">
+    <line x1="125" y1="115" x2="125" y2="285" stroke="#2563eb" stroke-width="4"></line>
+    <path d="M125 115 l-9 18 h18 z M125 285 l-9 -18 h18 z" fill="#2563eb"></path>
+    <text x="145" y="205" font-size="19" font-weight="700" fill="#2563eb">
       VISINA
     </text>
 
     <!-- donja cijev -->
-    <line x1="375" y1="270" x2="375" y2="300"
-          stroke="#dc2626" stroke-width="4"/>
-    <path d="M375 270 l-8 14 h16 z M375 300 l-8 -14 h16 z"
-          fill="#dc2626"/>
-    <text x="390" y="270"
-          font-size="18" font-weight="700" fill="#dc2626">
+    <line x1="375" y1="270" x2="375" y2="300" stroke="#dc2626" stroke-width="4"></line>
+    <path d="M375 270 l-8 14 h16 z M375 300 l-8 -14 h16 z" fill="#dc2626"></path>
+    <text x="390" y="270" font-size="18" font-weight="700" fill="#dc2626">
       DONJA CIJEV
     </text>
 
     <!-- dužina kapije -->
-    <line x1="100" y1="350" x2="610" y2="350"
-          stroke="#f97316" stroke-width="4"/>
-    <path d="M100 350 l18 -9 v18 z M610 350 l-18 -9 v18 z"
-          fill="#f97316"/>
-    <text x="355" y="378" text-anchor="middle"
-          font-size="19" font-weight="700" fill="#ea580c">
+    <line x1="100" y1="350" x2="610" y2="350" stroke="#f97316" stroke-width="4"></line>
+    <path d="M100 350 l18 -9 v18 z M610 350 l-18 -9 v18 z" fill="#f97316"></path>
+    <text x="355" y="378" text-anchor="middle" font-size="19" font-weight="700" fill="#ea580c">
       DUŽINA KAPIJE
     </text>
 
     <!-- prostor otvaranja -->
-    <line x1="665" y1="350" x2="800" y2="350"
-          stroke="#7c3aed" stroke-width="4"/>
-    <path d="M665 350 l18 -9 v18 z M800 350 l-18 -9 v18 z"
-          fill="#7c3aed"/>
-    <text x="730" y="335" text-anchor="middle"
-          font-size="16" font-weight="700" fill="#7c3aed">
+    <line x1="665" y1="350" x2="800" y2="350" stroke="#7c3aed" stroke-width="4"></line>
+    <path d="M665 350 l18 -9 v18 z M800 350 l-18 -9 v18 z" fill="#7c3aed"></path>
+    <text x="730" y="335" text-anchor="middle" font-size="16" font-weight="700" fill="#7c3aed">
       PROSTOR OTVARANJA
     </text>
 
@@ -392,10 +361,10 @@
       <div class="card">
         <div class="section-title"><span class="num">6</span> Slike objekta</div>
         <label>Dodaj / uslikaj objekat</label>
-        <input id="photosInput" type="file" accept="image/*" capture="environment" multiple onchange="handlePhotoFiles(this.files)">
+        <input id="photosInput" type="file" accept="image/*" capture="environment" multiple="" onchange="handlePhotoFiles(this.files)">
         <div class="hint">Slike se umanje i čuvaju u nacrtu na ovom telefonu. Za obradu naloga koristi dugme “Sačuvaj obrazac + slike”.</div>
         <div class="photo-actions">
-          <button type="button" class="light" onclick="document.getElementById('photosInput').click()">Dodaj još slika</button>
+          <button type="button" class="light" onclick="document.getElementById(&#39;photosInput&#39;).click()">Dodaj još slika</button>
           <button type="button" class="danger" onclick="clearPhotos()">Obriši slike</button>
         </div>
         <div id="photoPreview" class="photo-preview"></div>
@@ -414,7 +383,7 @@
     <div id="output" class="output"></div>
     <div class="footer-note">ALUROL doo – obrazac za mjerenje na terenu</div>
   </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-js@2"></script>
 <script>
   const SUPABASE_URL = "https://zevvkjwnedtgeabnsfcd.supabase.co";
 const SUPABASE_KEY ="sb_publishable_fgTbRdIIS4nvLJUGI-BF9Q_7Y6qk6lR";
@@ -468,7 +437,6 @@ duzina_kapije: val("tip") === "Klizna kapija"
       desni_spalet: val("desni"),
       dubina_prostora: val("dubina"),
       visina_plafona: val("plafon"),
-      proizvodna_mjera: val("proizvodnaMjera"),
 
       mjera_a: val("krilnaA"),
       mjera_b: val("krilnaB"),
@@ -480,47 +448,9 @@ duzina_kapije: val("tip") === "Klizna kapija"
    val("tip") === "Industrijska vrata")
     ? `Sistem vješanja: ${val("systemVjesanja")}${val("napomena") ? "\n" + val("napomena") : ""}`
     : val("napomena"),
-      slike: []
+      slike: window.savedPhotos || []
     };
-const imageUrls = [];
 
-const photosToUpload = photos || [];
-
-for (let i = 0; i < photosToUpload.length; i++) {
-  const photoData = photosToUpload[i].dataUrl;
-
-  const response = await fetch(photoData);
-  const blob = await response.blob();
-
-  const extension =
-    blob.type === "image/png" ? "png" :
-    blob.type === "image/webp" ? "webp" :
-    "jpg";
-
-  const fileName =
-    `mjerenje_${Date.now()}_${i}.${extension}`;
-
-  const { error: uploadError } = await supabaseClient.storage
-    .from("mjerenja_slike")
-    .upload(fileName, blob, {
-      contentType: blob.type,
-      upsert: false
-    });
-
-  if (uploadError) {
-    alert("Greška pri slanju slike: " + uploadError.message);
-    console.error(uploadError);
-    return;
-  }
-
-  const { data: publicData } = supabaseClient.storage
-    .from("mjerenja_slike")
-    .getPublicUrl(fileName);
-
-  imageUrls.push(publicData.publicUrl);
-}
-
-payload.slike = imageUrls;
     const { error } = await supabaseClient
       .from("measurements")
       .insert([payload]);
@@ -633,7 +563,7 @@ keyboardFields.forEach((field, index) => {
     );
   }
 });
-  const ids = ["datum","radnik","kupac","telefon","mjesto","adresa","tip","boja","motor","systemVjesanja","struja","demontaza","krilnaSmjer","krilnaUgao","krilnaA","krilnaB","krilnaC","sirina","visina","nadvoj","lijevi","desni","dubina","plafon","proizvodnaMjera","napomena","chkPod","chkZid","chkPrepreke","chkSlike"];
+  const ids = ["datum","radnik","kupac","telefon","mjesto","adresa","tip","boja","motor","systemVjesanja","struja","demontaza","krilnaSmjer","krilnaUgao","krilnaA","krilnaB","krilnaC","sirina","visina","nadvoj","lijevi","desni","dubina","plafon","napomena","chkPod","chkZid","chkPrepreke","chkSlike"];
   const draftKey = "alurol_mjerenje_draft_v3_photos";
   let photos = [];
   function el(id){ return document.getElementById(id); }
@@ -692,53 +622,45 @@ C mjera: ${val("krilnaC")}
     }
   }
   function updateSystemVjesanja(){
-    const wrap = el("systemVjesanjaWrap");
-    if(!wrap) return;
+  const wrap = el("systemVjesanjaWrap");
+  if(!wrap) return;
 
-    const t = val("tip");
-    const prikazi =
-      t === "Sekciona garažna vrata HOME X" ||
-      t === "Sekciona garažna vrata HOME F" ||
-      t === "Industrijska vrata";
+  const t = val("tip");
+  const prikazi =
+    t === "Sekciona garažna vrata HOME X" ||
+    t === "Sekciona garažna vrata HOME F" ||
+    t === "Industrijska vrata";
 
-    wrap.style.display = prikazi ? "block" : "none";
+  wrap.style.display = prikazi ? "block" : "none";
 
-    const sistem = el("systemVjesanja");
-    if(sistem){
-      sistem.value = prikazi ? (sistem.value || "Standardno") : "";
-    }
+  const sistem = el("systemVjesanja");
+  if(sistem){
+    sistem.value = prikazi ? (sistem.value || "Standardno") : "";
+  }
+}
+function updateKliznaMjere(){
+  const tip = val("tip");
+
+  const kliznaBox = el("kliznaMjereBox");
+  if(kliznaBox){
+    kliznaBox.classList.toggle("show", tip === "Klizna kapija");
   }
 
-  function updateKliznaMjere(){
-    const tip = val("tip");
-
-    const kliznaBox = el("kliznaMjereBox");
-    if(kliznaBox){
-      kliznaBox.classList.toggle("show", tip === "Klizna kapija");
-    }
-
-    const standardBox = el("standardMjereBox");
-    if(standardBox){
-      standardBox.style.display =
-        (tip === "Klizna kapija" || tip === "Krilna kapija") ? "none" : "block";
-    }
+  const standardBox = el("standardMjereBox");
+  if(standardBox){
+    standardBox.style.display =
+      (tip === "Klizna kapija" || tip === "Krilna kapija")
+        ? "none"
+        : "block";
   }
-
-  function updateConditionalFields(){
-    const tip = val("tip");
-    const kapija = tip === "Klizna kapija" || tip === "Krilna kapija";
-
-    const doorOptionsBox = el("doorOptionsBox");
-    if(doorOptionsBox){
-      doorOptionsBox.style.display = kapija ? "none" : "block";
-    }
-
-    toggleKrilnaKapija();
-    updateMeasureLabels();
-    updateSystemVjesanja();
-    updateKliznaMjere();
-  }
-
+}
+function updateConditionalFields(){
+  toggleKrilnaKapija();
+  toggleKapijaFields();
+  updateMeasureLabels();
+  updateSystemVjesanja();
+  updateKliznaMjere();
+}
 function makeReport(){
   const kapija = isKliznaOrKrilnaKapija();
 
@@ -757,7 +679,6 @@ Lijevi špalet: ${val("lijevi")} mm
 Desni špalet: ${val("desni")} mm
 Dubina prostora: ${val("dubina")} mm
 Visina plafona: ${val("plafon")} mm
-Proizvodna mjera: ${val("proizvodnaMjera")} mm
 `;    const kontrolna = kapija
       ? ""
       : `
@@ -947,5 +868,6 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
   if(tipSelect) tipSelect.addEventListener("change", updateConditionalFields);
   setToday(); setDefaultWorker(); updateConditionalFields();
 </script>
-</body>
-</html>
+
+
+</body></html>
