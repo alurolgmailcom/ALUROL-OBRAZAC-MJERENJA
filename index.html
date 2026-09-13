@@ -643,9 +643,20 @@ proizvodna_visina: val("proizvodnaVisina"),
       slike: []
     };
 
-    if (val("tip") === "Aluminijske roletne" && typeof roletneReportText === "function") {
-      const roletneTekst = roletneReportText(true);
-      payload.napomena = roletneTekst + (val("napomena") ? "\n\nNAPOMENA:\n" + val("napomena") : "");
+    if (val("tip") === "Aluminijske roletne" && typeof getRoletneState === "function") {
+      // Roletne se čuvaju strukturirano u posebnom JSONB polju u bazi.
+      // Polje Napomena ostaje isključivo za stvarnu napomenu sa terena.
+      const stanjeRoletni = getRoletneState();
+      const totals = typeof calcRoletneTotals === "function" ? calcRoletneTotals() : {};
+      payload.roletne_podaci = {
+        ...stanjeRoletni,
+        ukupnaKvadraturaRoletni: totals.roletneM2 || 0,
+        ukupnaKvadraturaKomarnika: totals.komarnikM2 || 0,
+        ukupnoRoletne: totals.roletneIznos || 0,
+        ukupnoKomarnici: totals.komarnikIznos || 0,
+        ukupno: (totals.roletneIznos || 0) + (totals.komarnikIznos || 0)
+      };
+      payload.napomena = val("napomena");
     }
 
 const imageUrls = [];
@@ -1075,10 +1086,10 @@ keyboardFields.forEach((field, index) => {
     const lines = [];
 
     if(!forDatabase){
-      lines.push("ALUMINIJске ROLETNE:");
+      lines.push("ALUMINIJSKE ROLETNE:");
       lines.push(`Boja: ${val("roletneBoja")}`);
     } else {
-      lines.push("ALUMINIJске ROLETNE");
+      lines.push("ALUMINIJSKE ROLETNE");
       lines.push(`Boja: ${val("roletneBoja")}`);
     }
 
