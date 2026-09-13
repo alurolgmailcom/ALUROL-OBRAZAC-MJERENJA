@@ -135,6 +135,28 @@
     .auto-width{
       background:#f3f4f6;
     }
+    .roletna-drawing-wrap{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+      padding:8px 6px 4px;
+      overflow:hidden;
+    }
+    .roletna-drawing-title{
+      text-align:center;
+      font-size:12px;
+      font-weight:800;
+      color:var(--muted);
+      margin:2px 0 4px;
+    }
+    .roletna-drawing{width:100%;height:auto;display:block;touch-action:manipulation;}
+    .roletna-drive-button{cursor:pointer;outline:none;}
+    .roletna-drive-button circle{fill:#fff;stroke:#111827;stroke-width:2;}
+    .roletna-drive-button.active circle{stroke:var(--primary);stroke-width:4;}
+    .roletna-drive-button text{font-size:9px;font-weight:800;fill:#111827;pointer-events:none;}
+    .roletna-drive-button:focus circle{stroke:var(--primary);stroke-width:4;}
+    .roletna-invalid-width{color:var(--danger);font-weight:800;text-align:center;font-size:12px;margin:4px 0;}
 
   </style>
 </head>
@@ -279,9 +301,14 @@
         </div>
 
         <div id="roletnaDijelovi"></div>
+        <div class="roletna-drawing-wrap">
+          <div class="roletna-drawing-title">NACRT ROLETNE — IZABERI STRANU POGONA NA KRUŽIĆU</div>
+          <div id="roletnaDrawing"></div>
+          <div id="roletnaWidthWarning" class="roletna-invalid-width" hidden></div>
+        </div>
 
         <div class="roletne-inline-actions">
-          <button type="button" class="primary" onclick="unesiRoletnu()">UNESI</button>
+          <button type="button" class="primary" onclick="unesiRoletnu()">SAČUVAJ I SLJEDEĆA</button>
           <button id="roletneSaveBtn" type="button" class="secondary" onclick="saveRoletneMeasurement()">SAČUVAJ MJERENJE</button>
         </div>
         <div id="roletneSaveStatus" class="hint" style="display:none;margin-top:8px;font-weight:700;color:#166534;">
@@ -744,6 +771,7 @@ function getVisibleFields() {
   ).filter((field) => {
     return (
       !field.disabled &&
+      !field.readOnly &&
       field.offsetParent !== null &&
       getComputedStyle(field).visibility !== "hidden"
     );
@@ -783,6 +811,15 @@ measurementForm.addEventListener("keydown", (event) => {
 
   // U polju Napomena Enter ostaje za novi red
   if (currentField.tagName === "TEXTAREA") return;
+
+  // Kod roletni nakon ukupne širine idi direktno na prvu ručnu mjeru.
+  if(currentField.id === "roletnaUkupnaSirina"){
+    event.preventDefault();
+    const podjela = Math.max(1, Math.min(3, parseInt(val("roletnaPodjela") || "1", 10)));
+    const nextMeasure = el(podjela === 1 ? "rolVisina1" : "rolSirina1");
+    if(nextMeasure) focusAndShow(nextMeasure);
+    return;
+  }
 
   const fields = getVisibleFields();
   const currentIndex = fields.indexOf(currentField);
@@ -840,11 +877,22 @@ keyboardFields.forEach((field, index) => {
     const box = el("roletnaDijelovi");
     if(!box) return;
 
+    const previous = Array.from({length:3}, (_, index) => {
+      const i = index + 1;
+      return {
+        sirina: el(`rolSirina${i}`)?.value || "",
+        visina: el(`rolVisina${i}`)?.value || "",
+        pogon: el(`rolPogon${i}`)?.value || "",
+        strana: el(`rolStrana${i}`)?.value || "",
+        komarnik: !!el(`rolKomarnik${i}`)?.checked
+      };
+    });
     const count = Math.max(1, Math.min(3, parseInt(val("roletnaPodjela") || "1", 10)));
     let htmlParts = "";
 
     for(let i = 1; i <= count; i++){
       const autoLast = (count === 1) || (count > 1 && i === count);
+      const saved = previous[i - 1];
       htmlParts += `
         <div class="roletna-part">
           <div class="roletna-part-title">DIO ${i}</div>
@@ -853,12 +901,13 @@ keyboardFields.forEach((field, index) => {
               <label class="req">Širina mm</label>
               <input id="rolSirina${i}" type="number" inputmode="numeric"
                 ${autoLast ? 'readonly class="auto-width"' : ''}
+                value="${saved.sirina}"
                 placeholder="${autoLast ? 'automatski' : 'upiši širinu'}"
                 oninput="updateAutoRoletnaWidth()">
             </div>
             <div>
               <label class="req">Visina mm</label>
-              <input id="rolVisina${i}" type="number" inputmode="numeric" placeholder="upiši visinu">
+              <input id="rolVisina${i}" type="number" inputmode="numeric" value="${saved.visina}" placeholder="upiši visinu" oninput="renderRoletnaDrawing()">
             </div>
           </div>
           <div class="grid two">
@@ -866,22 +915,22 @@ keyboardFields.forEach((field, index) => {
               <label>Pogon</label>
               <select id="rolPogon${i}">
                 <option></option>
-                <option>Motor</option>
-                <option>Traka</option>
-                <option>Kurbla</option>
+                <option ${saved.pogon === "Motor" ? "selected" : ""}>Motor</option>
+                <option ${saved.pogon === "Traka" ? "selected" : ""}>Traka</option>
+                <option ${saved.pogon === "Kurbla" ? "selected" : ""}>Kurbla</option>
               </select>
             </div>
             <div>
               <label>Strana pogona</label>
-              <select id="rolStrana${i}">
+              <select id="rolStrana${i}" onchange="renderRoletnaDrawing()">
                 <option></option>
-                <option>Lijevo</option>
-                <option>Desno</option>
+                <option ${saved.strana === "Lijevo" ? "selected" : ""}>Lijevo</option>
+                <option ${saved.strana === "Desno" ? "selected" : ""}>Desno</option>
               </select>
             </div>
           </div>
           <div class="check" style="margin-top:10px;">
-            <input id="rolKomarnik${i}" type="checkbox">
+            <input id="rolKomarnik${i}" type="checkbox" ${saved.komarnik ? "checked" : ""}>
             <label for="rolKomarnik${i}">Komarnik</label>
           </div>
         </div>`;
@@ -894,22 +943,108 @@ keyboardFields.forEach((field, index) => {
   function updateAutoRoletnaWidth(){
     const total = numValue("roletnaUkupnaSirina");
     const count = Math.max(1, Math.min(3, parseInt(val("roletnaPodjela") || "1", 10)));
+    let remaining = total;
 
     if(count === 1){
       const f = el("rolSirina1");
       if(f) f.value = total > 0 ? total : "";
-      return;
+    } else {
+      let used = 0;
+      for(let i = 1; i < count; i++) used += numValue(`rolSirina${i}`);
+      remaining = total - used;
+
+      const last = el(`rolSirina${count}`);
+      if(last){
+        last.value = total > 0 && remaining >= 0 ? remaining : "";
+        last.style.borderColor = remaining < 0 ? "var(--danger)" : "";
+      }
     }
 
-    let used = 0;
-    for(let i = 1; i < count; i++) used += numValue(`rolSirina${i}`);
-
-    const last = el(`rolSirina${count}`);
-    if(last){
-      const remaining = total - used;
-      last.value = total > 0 && remaining >= 0 ? remaining : "";
-      last.style.borderColor = remaining < 0 ? "var(--danger)" : "";
+    const warning = el("roletnaWidthWarning");
+    if(warning){
+      warning.hidden = remaining >= 0;
+      warning.textContent = remaining < 0 ? "Zbir unesenih širina je veći od ukupne širine." : "";
     }
+    renderRoletnaDrawing();
+  }
+
+  function setRoletnaSide(index, side){
+    const field = el(`rolStrana${index}`);
+    if(!field) return;
+    field.value = side;
+    renderRoletnaDrawing();
+  }
+
+  function roletnaDriveButton(index, side, cx, cy, active){
+    const shortLabel = side === "Lijevo" ? "L" : "D";
+    return `<g class="roletna-drive-button${active ? " active" : ""}" role="button" tabindex="0"
+      aria-label="DIO ${index}, strana pogona ${side}"
+      onclick="setRoletnaSide(${index}, '${side}')"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setRoletnaSide(${index}, '${side}');}">
+      <circle cx="${cx}" cy="${cy}" r="9"></circle>
+      <text x="${cx}" y="${cy + 3}" text-anchor="middle">${shortLabel}</text>
+    </g>`;
+  }
+
+  function renderRoletnaDrawing(){
+    const host = el("roletnaDrawing");
+    if(!host) return;
+
+    const count = Math.max(1, Math.min(3, parseInt(val("roletnaPodjela") || "1", 10)));
+    const totalInput = numValue("roletnaUkupnaSirina");
+    const parts = Array.from({length:count}, (_, index) => ({
+      width: numValue(`rolSirina${index + 1}`),
+      height: numValue(`rolVisina${index + 1}`),
+      side: val(`rolStrana${index + 1}`)
+    }));
+    const widthsTotal = parts.reduce((sum, part) => sum + part.width, 0);
+    const drawingTotal = totalInput > 0 ? totalInput : (widthsTotal || count);
+    const maxHeight = Math.max(1, ...parts.map(part => part.height || 1));
+    const xStart = 42;
+    const yStart = 72;
+    const availableWidth = 300;
+    const availableHeight = 145;
+    let cursorX = xStart;
+    let bodies = "";
+    let dimensions = "";
+    let controls = "";
+
+    parts.forEach((part, index) => {
+      const number = index + 1;
+      const widthRatio = (part.width > 0 ? part.width : drawingTotal / count) / drawingTotal;
+      const rectWidth = Math.max(28, availableWidth * widthRatio);
+      const rectHeight = Math.max(48, availableHeight * ((part.height || maxHeight) / maxHeight));
+      const x = cursorX;
+      const y = yStart;
+      const lineCount = Math.max(4, Math.min(18, Math.round(rectHeight / 9)));
+      const slats = Array.from({length:lineCount - 1}, (_, slatIndex) => {
+        const lineY = y + ((slatIndex + 1) * rectHeight / lineCount);
+        return `<line x1="${x}" y1="${lineY}" x2="${x + rectWidth}" y2="${lineY}" stroke="#1f2937" stroke-width="1"/>`;
+      }).join("");
+
+      bodies += `<rect x="${x}" y="${y}" width="${rectWidth}" height="${rectHeight}" fill="#4b5563" stroke="#111827" stroke-width="2"/>${slats}`;
+      dimensions += `<line x1="${x}" y1="55" x2="${x + rectWidth}" y2="55" stroke="#111827"/>
+        <line x1="${x}" y1="50" x2="${x}" y2="60" stroke="#111827"/>
+        <line x1="${x + rectWidth}" y1="50" x2="${x + rectWidth}" y2="60" stroke="#111827"/>
+        <text x="${x + rectWidth / 2}" y="48" text-anchor="middle" font-size="11" font-weight="700">${part.width > 0 ? part.width + " mm" : "—"}</text>
+        <line x1="${x - 8}" y1="${y}" x2="${x - 8}" y2="${y + rectHeight}" stroke="#111827"/>
+        <line x1="${x - 12}" y1="${y}" x2="${x - 4}" y2="${y}" stroke="#111827"/>
+        <line x1="${x - 12}" y1="${y + rectHeight}" x2="${x - 4}" y2="${y + rectHeight}" stroke="#111827"/>
+        <text x="${x - 14}" y="${y + rectHeight / 2}" text-anchor="middle" font-size="10" font-weight="700" transform="rotate(-90 ${x - 14} ${y + rectHeight / 2})">${part.height > 0 ? part.height + " mm" : "VISINA"}</text>`;
+      controls += roletnaDriveButton(number, "Lijevo", x + 12, y + 13, part.side === "Lijevo");
+      controls += roletnaDriveButton(number, "Desno", x + rectWidth - 12, y + 13, part.side === "Desno");
+      controls += `<text x="${x + rectWidth / 2}" y="${y + rectHeight + 17}" text-anchor="middle" font-size="11" font-weight="800">DIO ${number}</text>`;
+      cursorX += rectWidth;
+    });
+
+    const drawnEnd = cursorX;
+    host.innerHTML = `<svg class="roletna-drawing" viewBox="0 0 370 255" role="img" aria-label="Interaktivni nacrt roletne sa ${count} dijela">
+      <line x1="${xStart}" y1="20" x2="${drawnEnd}" y2="20" stroke="#111827" stroke-width="1.5"/>
+      <line x1="${xStart}" y1="14" x2="${xStart}" y2="26" stroke="#111827" stroke-width="1.5"/>
+      <line x1="${drawnEnd}" y1="14" x2="${drawnEnd}" y2="26" stroke="#111827" stroke-width="1.5"/>
+      <text x="${(xStart + drawnEnd) / 2}" y="13" text-anchor="middle" font-size="13" font-weight="800">UKUPNO: ${totalInput > 0 ? totalInput + " mm" : "UPIŠI ŠIRINU"}</text>
+      ${bodies}${dimensions}${controls}
+    </svg>`;
   }
 
   function readCurrentRoletna(){
@@ -1064,6 +1199,7 @@ keyboardFields.forEach((field, index) => {
     if(el("komarnikCijena")) el("komarnikCijena").value = s.cijenaKomarnika || "";
     if(el("roletnaBroj")) el("roletnaBroj").value = String(roletneItems.length + 1);
 
+    renderRoletnaDijelovi();
     renderUneseneRoletne();
     renderRoletneTotals();
   }
