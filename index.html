@@ -944,6 +944,7 @@ keyboardFields.forEach((field, index) => {
     const total = numValue("roletnaUkupnaSirina");
     const count = Math.max(1, Math.min(3, parseInt(val("roletnaPodjela") || "1", 10)));
     let remaining = total;
+    let warningText = "";
 
     if(count === 1){
       const f = el("rolSirina1");
@@ -955,15 +956,22 @@ keyboardFields.forEach((field, index) => {
 
       const last = el(`rolSirina${count}`);
       if(last){
-        last.value = total > 0 && remaining >= 0 ? remaining : "";
-        last.style.borderColor = remaining < 0 ? "var(--danger)" : "";
+        // Automatski dio mora biti veći od 0; inače polje ostaje prazno uz upozorenje
+        last.value = total > 0 && remaining > 0 ? remaining : "";
+        last.style.borderColor = remaining <= 0 ? "var(--danger)" : "";
+      }
+
+      if(total > 0 && remaining <= 0){
+        warningText = remaining === 0
+          ? "Automatski dio bi bio 0 mm — smanji širinu ručno unesenih dijelova."
+          : "Zbir unesenih širina je veći od ukupne širine.";
       }
     }
 
     const warning = el("roletnaWidthWarning");
     if(warning){
-      warning.hidden = remaining >= 0;
-      warning.textContent = remaining < 0 ? "Zbir unesenih širina je veći od ukupne širine." : "";
+      warning.hidden = !warningText;
+      warning.textContent = warningText;
     }
     renderRoletnaDrawing();
   }
@@ -1645,6 +1653,14 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
 
   const roletnaUkupnaSirinaInput = el("roletnaUkupnaSirina");
   if(roletnaUkupnaSirinaInput) roletnaUkupnaSirinaInput.addEventListener("input", updateAutoRoletnaWidth);
+
+  // Rezervno presretanje unosa: obračun zadnjeg dijela reaguje na svaku promjenu širine dijelova
+  const roletnaDijeloviBox = el("roletnaDijelovi");
+  if(roletnaDijeloviBox){
+    roletnaDijeloviBox.addEventListener("input", (e) => {
+      if(e.target && /^rolSirina\d+$/.test(e.target.id)) updateAutoRoletnaWidth();
+    });
+  }
 
   setToday(); setDefaultWorker(); renderRoletnaDijelovi(); updateConditionalFields();
 </script>
