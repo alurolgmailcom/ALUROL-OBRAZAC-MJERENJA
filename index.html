@@ -76,6 +76,66 @@
     .gate-diagram svg{width:100%;height:auto;display:block;border-radius:8px;background:#f9fafb;}
     .gate-measures{margin-top:12px;border-top:1px solid var(--border);padding-top:10px;}
     .gate-note{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.35;}
+
+    /* DODATAK: Aluminijske roletne */
+    .roletne-extra{display:none;}
+    .roletne-extra.show{display:block;}
+    .roletna-part{
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:var(--soft);
+      padding:10px;
+      margin-top:10px;
+    }
+    .roletna-part-title{
+      font-weight:800;
+      font-size:14px;
+      margin-bottom:4px;
+    }
+    .roletne-inline-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:12px;
+    }
+    .roletne-summary{
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+      padding:10px;
+      margin-top:12px;
+    }
+    .roletne-summary-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:6px 0;
+      border-bottom:1px solid #eef0f2;
+      font-size:14px;
+    }
+    .roletne-summary-row:last-child{border-bottom:0;}
+    .roletne-total{
+      font-size:17px;
+      font-weight:800;
+    }
+    .roletne-entered-item{
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:9px;
+      margin-top:8px;
+      background:var(--soft);
+      font-size:13px;
+      line-height:1.45;
+    }
+    .roletne-entered-item button{
+      margin-top:7px;
+      padding:8px 10px;
+      font-size:12px;
+    }
+    .auto-width{
+      background:#f3f4f6;
+    }
+
   </style>
 </head>
 <body>
@@ -112,6 +172,7 @@
           <option>Sekciona garažna vrata HOME F</option>
           <option>Industrijska vrata</option>
           <option>Rolo vrata</option>
+          <option>Aluminijske roletne</option>
           <option>Klizna kapija</option>
           <option>Krilna kapija</option>
           <option>Parking rampa</option>
@@ -175,6 +236,92 @@
                 <option>Nema starih vrata</option>
               </select>
             </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div id="roletneBox" class="card roletne-extra">
+        <div class="section-title"><span class="num">R</span> Aluminijske roletne</div>
+
+        <div class="grid two">
+          <div>
+            <label>Boja</label>
+            <select id="roletneBoja">
+              <option></option>
+              <option>Bijela</option>
+              <option>Brown</option>
+              <option>Metalik</option>
+              <option>Siva</option>
+              <option>Antracit</option>
+              <option>Golden Oak</option>
+            </select>
+          </div>
+          <div>
+            <label>Roletna broj</label>
+            <input id="roletnaBroj" type="text" value="1" readonly class="auto-width">
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div>
+            <label class="req">Ukupna širina otvora mm</label>
+            <input id="roletnaUkupnaSirina" type="number" inputmode="numeric" placeholder="npr. 2500">
+          </div>
+          <div>
+            <label>Podjela</label>
+            <select id="roletnaPodjela">
+              <option value="1">1 dio</option>
+              <option value="2">2 dijela</option>
+              <option value="3">3 dijela</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="roletnaDijelovi"></div>
+
+        <div class="roletne-inline-actions">
+          <button type="button" class="primary" onclick="unesiRoletnu()">UNESI</button>
+          <button id="roletneSaveBtn" type="button" class="secondary" onclick="saveRoletneMeasurement()">SAČUVAJ MJERENJE</button>
+        </div>
+        <div id="roletneSaveStatus" class="hint" style="display:none;margin-top:8px;font-weight:700;color:#166534;">
+          ✓ Mjerenje je sačuvano.
+        </div>
+
+        <div id="uneseneRoletne" style="margin-top:12px;"></div>
+
+        <div class="roletne-summary">
+          <div class="section-title" style="margin-bottom:8px;"><span class="num">Σ</span> Obračun</div>
+
+          <div class="roletne-summary-row">
+            <strong>Ukupna kvadratura roletni</strong>
+            <span id="roletneM2">0,00 m²</span>
+          </div>
+          <div>
+            <label>Cijena roletne po m² (KM)</label>
+            <input id="roletneCijena" type="number" inputmode="decimal" step="0.01" placeholder="0,00" oninput="renderRoletneTotals()">
+          </div>
+          <div class="roletne-summary-row">
+            <strong>Ukupno roletne</strong>
+            <span id="roletneIznos">0,00 KM</span>
+          </div>
+
+          <div class="roletne-summary-row" style="margin-top:6px;">
+            <strong>Ukupna kvadratura komarnika</strong>
+            <span id="komarnikM2">0,00 m²</span>
+          </div>
+          <div>
+            <label>Cijena komarnika po m² (KM)</label>
+            <input id="komarnikCijena" type="number" inputmode="decimal" step="0.01" placeholder="0,00" oninput="renderRoletneTotals()">
+          </div>
+          <div class="roletne-summary-row">
+            <strong>Ukupno komarnici</strong>
+            <span id="komarnikIznos">0,00 KM</span>
+          </div>
+
+          <div class="roletne-summary-row roletne-total" style="margin-top:8px;">
+            <span>UKUPNO</span>
+            <span id="roletneUkupnoIznos">0,00 KM</span>
           </div>
         </div>
       </div>
@@ -374,7 +521,7 @@
   </div>
 </div>
 
-      <div class="card kapija-hide">
+      <div id="kontrolnaListaCard" class="card kapija-hide">
         <div class="section-title"><span class="num">4</span> Kontrolna lista sa terena</div>
         <div class="checks">
           <div class="check"><input id="chkPod" type="checkbox"><label for="chkPod">Pod provjeren / ravan</label></div>
@@ -431,6 +578,13 @@ const val = (id) => document.getElementById(id)?.value?.trim() || "";
       return;
     }
 
+    if (val("tip") === "Aluminijske roletne" &&
+        typeof getRoletneState === "function" &&
+        getRoletneState().items.length === 0) {
+      alert("Unesi najmanje jednu roletnu prije slanja.");
+      return;
+    }
+
     const payload = {
       datum_mjerenja: val("datum"),
       radnik: val("radnik"),
@@ -440,16 +594,20 @@ const val = (id) => document.getElementById(id)?.value?.trim() || "";
       adresa: val("adresa"),
 
       tip_proizvoda: val("tip"),
-      boja: val("boja"),
+      boja: val("tip") === "Aluminijske roletne" ? val("roletneBoja") : val("boja"),
       motor: val("motor"),
       struja: val("struja"),
       demontaza: val("demontaza"),
 
-sirina: (val("tip") !== "Krilna kapija" && val("tip") !== "Klizna kapija")
+sirina: (val("tip") !== "Krilna kapija" &&
+         val("tip") !== "Klizna kapija" &&
+         val("tip") !== "Aluminijske roletne")
   ? val("sirina")
   : null,
 
-visina: (val("tip") !== "Krilna kapija" && val("tip") !== "Klizna kapija")
+visina: (val("tip") !== "Krilna kapija" &&
+         val("tip") !== "Klizna kapija" &&
+         val("tip") !== "Aluminijske roletne")
   ? val("visina")
   : null,
 
@@ -484,6 +642,12 @@ proizvodna_visina: val("proizvodnaVisina"),
     : val("napomena"),
       slike: []
     };
+
+    if (val("tip") === "Aluminijske roletne" && typeof roletneReportText === "function") {
+      const roletneTekst = roletneReportText(true);
+      payload.napomena = roletneTekst + (val("napomena") ? "\n\nNAPOMENA:\n" + val("napomena") : "");
+    }
+
 const imageUrls = [];
 
 const photosToUpload = photos || [];
@@ -538,6 +702,7 @@ payload.slike = imageUrls;
     // Poslije uspješnog slanja pripremi potpuno čist obrazac za novo mjerenje.
     document.getElementById("measurementForm").reset();
     localStorage.removeItem("alurol_mjerenje_draft_v3_photos");
+    if (typeof resetRoletneState === "function") resetRoletneState();
 
     const dateField = document.getElementById("datum");
     if (dateField) dateField.value = new Date().toISOString().split("T")[0];
@@ -641,6 +806,323 @@ keyboardFields.forEach((field, index) => {
   function el(id){ return document.getElementById(id); }
   function val(id){ const node = el(id); if (!node) return ""; if (node.type === "checkbox") return node.checked ? "DA" : "NE"; return (node.value || "").trim(); }
   function selectedColor(){ return val("boja"); }
+
+  // DODATAK: Aluminijske roletne
+  let roletneItems = [];
+
+  function isRoletne(){ return val("tip") === "Aluminijske roletne"; }
+
+  function numValue(id){
+    const raw = (el(id)?.value || "").toString().replace(",", ".").trim();
+    const n = parseFloat(raw);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function formatNumberBs(n){
+    return (Number(n) || 0).toLocaleString("bs-BA", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function renderRoletnaDijelovi(){
+    const box = el("roletnaDijelovi");
+    if(!box) return;
+
+    const count = Math.max(1, Math.min(3, parseInt(val("roletnaPodjela") || "1", 10)));
+    let htmlParts = "";
+
+    for(let i = 1; i <= count; i++){
+      const autoLast = (count === 1) || (count > 1 && i === count);
+      htmlParts += `
+        <div class="roletna-part">
+          <div class="roletna-part-title">DIO ${i}</div>
+          <div class="grid two">
+            <div>
+              <label class="req">Širina mm</label>
+              <input id="rolSirina${i}" type="number" inputmode="numeric"
+                ${autoLast ? 'readonly class="auto-width"' : ''}
+                placeholder="${autoLast ? 'automatski' : 'upiši širinu'}"
+                oninput="updateAutoRoletnaWidth()">
+            </div>
+            <div>
+              <label class="req">Visina mm</label>
+              <input id="rolVisina${i}" type="number" inputmode="numeric" placeholder="upiši visinu">
+            </div>
+          </div>
+          <div class="grid two">
+            <div>
+              <label>Pogon</label>
+              <select id="rolPogon${i}">
+                <option></option>
+                <option>Motor</option>
+                <option>Traka</option>
+                <option>Kurbla</option>
+              </select>
+            </div>
+            <div>
+              <label>Strana pogona</label>
+              <select id="rolStrana${i}">
+                <option></option>
+                <option>Lijevo</option>
+                <option>Desno</option>
+              </select>
+            </div>
+          </div>
+          <div class="check" style="margin-top:10px;">
+            <input id="rolKomarnik${i}" type="checkbox">
+            <label for="rolKomarnik${i}">Komarnik</label>
+          </div>
+        </div>`;
+    }
+
+    box.innerHTML = htmlParts;
+    updateAutoRoletnaWidth();
+  }
+
+  function updateAutoRoletnaWidth(){
+    const total = numValue("roletnaUkupnaSirina");
+    const count = Math.max(1, Math.min(3, parseInt(val("roletnaPodjela") || "1", 10)));
+
+    if(count === 1){
+      const f = el("rolSirina1");
+      if(f) f.value = total > 0 ? total : "";
+      return;
+    }
+
+    let used = 0;
+    for(let i = 1; i < count; i++) used += numValue(`rolSirina${i}`);
+
+    const last = el(`rolSirina${count}`);
+    if(last){
+      const remaining = total - used;
+      last.value = total > 0 && remaining >= 0 ? remaining : "";
+      last.style.borderColor = remaining < 0 ? "var(--danger)" : "";
+    }
+  }
+
+  function readCurrentRoletna(){
+    const ukupnaSirina = numValue("roletnaUkupnaSirina");
+    const podjela = Math.max(1, Math.min(3, parseInt(val("roletnaPodjela") || "1", 10)));
+
+    if(ukupnaSirina <= 0){
+      alert("Upiši ukupnu širinu otvora.");
+      return null;
+    }
+
+    updateAutoRoletnaWidth();
+
+    const dijelovi = [];
+    let zbirSirina = 0;
+
+    for(let i = 1; i <= podjela; i++){
+      const sirina = numValue(`rolSirina${i}`);
+      const visina = numValue(`rolVisina${i}`);
+
+      if(sirina <= 0 || visina <= 0){
+        alert(`Upiši širinu i visinu za DIO ${i}.`);
+        return null;
+      }
+
+      zbirSirina += sirina;
+      dijelovi.push({
+        sirina,
+        visina,
+        pogon: val(`rolPogon${i}`),
+        strana: val(`rolStrana${i}`),
+        komarnik: !!el(`rolKomarnik${i}`)?.checked
+      });
+    }
+
+    if(Math.abs(zbirSirina - ukupnaSirina) > 0.01){
+      alert(`Zbir širina dijelova (${zbirSirina} mm) mora biti jednak ukupnoj širini (${ukupnaSirina} mm).`);
+      return null;
+    }
+
+    return {
+      broj: roletneItems.length + 1,
+      ukupnaSirina,
+      podjela,
+      dijelovi
+    };
+  }
+
+  function unesiRoletnu(){
+    const item = readCurrentRoletna();
+    if(!item) return;
+
+    roletneItems.push(item);
+    renderUneseneRoletne();
+    renderRoletneTotals();
+
+    el("roletnaUkupnaSirina").value = "";
+    el("roletnaPodjela").value = "1";
+    el("roletnaBroj").value = String(roletneItems.length + 1);
+    renderRoletnaDijelovi();
+
+    setTimeout(() => {
+      const f = el("roletnaUkupnaSirina");
+      if(f) focusAndShow(f);
+    }, 100);
+  }
+
+  function obrisiRoletnu(index){
+    roletneItems.splice(index, 1);
+    roletneItems.forEach((r, i) => r.broj = i + 1);
+    if(el("roletnaBroj")) el("roletnaBroj").value = String(roletneItems.length + 1);
+    renderUneseneRoletne();
+    renderRoletneTotals();
+    saveDraft(false);
+  }
+
+  function renderUneseneRoletne(){
+    const box = el("uneseneRoletne");
+    if(!box) return;
+
+    if(!roletneItems.length){
+      box.innerHTML = "";
+      return;
+    }
+
+    box.innerHTML = `<strong>UNESENE ROLETNE</strong>` + roletneItems.map((r, idx) => {
+      const parts = r.dijelovi.map((d, i) =>
+        `Dio ${i+1}: ${d.sirina}×${d.visina} mm` +
+        `${d.pogon ? " | " + d.pogon : ""}` +
+        `${d.strana ? " | " + d.strana : ""}` +
+        `${d.komarnik ? " | KOMARNIK" : ""}`
+      ).join("<br>");
+
+      return `<div class="roletne-entered-item">
+        <strong>Roletna ${r.broj}</strong> — ukupna širina ${r.ukupnaSirina} mm, ${r.podjela} ${r.podjela === 1 ? "dio" : "dijela"}<br>
+        ${parts}
+        <button type="button" class="danger" onclick="obrisiRoletnu(${idx})">Obriši ovu roletnu</button>
+      </div>`;
+    }).join("");
+  }
+
+  function calcRoletneTotals(){
+    let roletneM2 = 0;
+    let komarnikM2 = 0;
+
+    roletneItems.forEach(r => {
+      r.dijelovi.forEach(d => {
+        const m2 = (Number(d.sirina) * Number(d.visina)) / 1000000;
+        roletneM2 += m2;
+        if(d.komarnik) komarnikM2 += m2;
+      });
+    });
+
+    const cijenaRoletne = numValue("roletneCijena");
+    const cijenaKomarnika = numValue("komarnikCijena");
+
+    return {
+      roletneM2,
+      komarnikM2,
+      cijenaRoletne,
+      cijenaKomarnika,
+      roletneIznos: roletneM2 * cijenaRoletne,
+      komarnikIznos: komarnikM2 * cijenaKomarnika
+    };
+  }
+
+  function renderRoletneTotals(){
+    const t = calcRoletneTotals();
+    if(el("roletneM2")) el("roletneM2").textContent = `${formatNumberBs(t.roletneM2)} m²`;
+    if(el("komarnikM2")) el("komarnikM2").textContent = `${formatNumberBs(t.komarnikM2)} m²`;
+    if(el("roletneIznos")) el("roletneIznos").textContent = `${formatNumberBs(t.roletneIznos)} KM`;
+    if(el("komarnikIznos")) el("komarnikIznos").textContent = `${formatNumberBs(t.komarnikIznos)} KM`;
+    if(el("roletneUkupnoIznos")) el("roletneUkupnoIznos").textContent = `${formatNumberBs(t.roletneIznos + t.komarnikIznos)} KM`;
+  }
+
+  function getRoletneState(){
+    return {
+      boja: val("roletneBoja"),
+      items: roletneItems,
+      cijenaRoletne: numValue("roletneCijena"),
+      cijenaKomarnika: numValue("komarnikCijena")
+    };
+  }
+
+  function setRoletneState(state){
+    const s = state || {};
+    roletneItems = Array.isArray(s.items) ? s.items : [];
+    roletneItems.forEach((r, i) => r.broj = i + 1);
+
+    if(el("roletneBoja")) el("roletneBoja").value = s.boja || "";
+    if(el("roletneCijena")) el("roletneCijena").value = s.cijenaRoletne || "";
+    if(el("komarnikCijena")) el("komarnikCijena").value = s.cijenaKomarnika || "";
+    if(el("roletnaBroj")) el("roletnaBroj").value = String(roletneItems.length + 1);
+
+    renderUneseneRoletne();
+    renderRoletneTotals();
+  }
+
+  function resetRoletneState(){
+    roletneItems = [];
+    if(el("roletneBoja")) el("roletneBoja").value = "";
+    if(el("roletneCijena")) el("roletneCijena").value = "";
+    if(el("komarnikCijena")) el("komarnikCijena").value = "";
+    if(el("roletnaUkupnaSirina")) el("roletnaUkupnaSirina").value = "";
+    if(el("roletnaPodjela")) el("roletnaPodjela").value = "1";
+    if(el("roletnaBroj")) el("roletnaBroj").value = "1";
+    renderRoletnaDijelovi();
+    renderUneseneRoletne();
+    renderRoletneTotals();
+  }
+
+  function roletneReportText(forDatabase = false){
+    const t = calcRoletneTotals();
+    const lines = [];
+
+    if(!forDatabase){
+      lines.push("ALUMINIJске ROLETNE:");
+      lines.push(`Boja: ${val("roletneBoja")}`);
+    } else {
+      lines.push("ALUMINIJске ROLETNE");
+      lines.push(`Boja: ${val("roletneBoja")}`);
+    }
+
+    roletneItems.forEach(r => {
+      lines.push("");
+      lines.push(`Roletna ${r.broj} - ukupna širina otvora: ${r.ukupnaSirina} mm - podjela: ${r.podjela}`);
+      r.dijelovi.forEach((d, i) => {
+        lines.push(
+          `Dio ${i+1}: ${d.sirina} x ${d.visina} mm` +
+          ` | Pogon: ${d.pogon || "-"}` +
+          ` | Strana: ${d.strana || "-"}` +
+          ` | Komarnik: ${d.komarnik ? "DA" : "NE"}`
+        );
+      });
+    });
+
+    lines.push("");
+    lines.push(`Ukupna kvadratura roletni: ${formatNumberBs(t.roletneM2)} m²`);
+    lines.push(`Cijena roletne po m²: ${formatNumberBs(t.cijenaRoletne)} KM`);
+    lines.push(`Ukupno roletne: ${formatNumberBs(t.roletneIznos)} KM`);
+    lines.push(`Ukupna kvadratura komarnika: ${formatNumberBs(t.komarnikM2)} m²`);
+    lines.push(`Cijena komarnika po m²: ${formatNumberBs(t.cijenaKomarnika)} KM`);
+    lines.push(`Ukupno komarnici: ${formatNumberBs(t.komarnikIznos)} KM`);
+    lines.push(`UKUPNO: ${formatNumberBs(t.roletneIznos + t.komarnikIznos)} KM`);
+
+    return lines.join("\n");
+  }
+
+  function toggleRoletneFields(){
+    const roletne = isRoletne();
+
+    const box = el("roletneBox");
+    if(box) box.classList.toggle("show", roletne);
+
+    const kontrolna = el("kontrolnaListaCard");
+    if(kontrolna) kontrolna.style.display = roletne ? "none" : "";
+
+    if(roletne){
+      renderRoletnaDijelovi();
+      renderUneseneRoletne();
+      renderRoletneTotals();
+    }
+  }
+
   function isKrilnaKapija(){ return val("tip") === "Krilna kapija"; }
   function isKliznaKapija(){ return val("tip") === "Klizna kapija"; }
   function isKliznaOrKrilnaKapija(){ const t = val("tip"); return t === "Klizna kapija" || t === "Krilna kapija"; }
@@ -722,7 +1204,7 @@ C mjera: ${val("krilnaC")}
     const standardBox = el("standardMjereBox");
     if(standardBox){
       standardBox.style.display =
-        (tip === "Klizna kapija" || tip === "Krilna kapija") ? "none" : "block";
+        (tip === "Klizna kapija" || tip === "Krilna kapija" || tip === "Aluminijske roletne") ? "none" : "block";
     }
   }
 
@@ -732,16 +1214,42 @@ C mjera: ${val("krilnaC")}
 
     const doorOptionsBox = el("doorOptionsBox");
     if(doorOptionsBox){
-      doorOptionsBox.style.display = kapija ? "none" : "block";
+      doorOptionsBox.style.display = (kapija || tip === "Aluminijske roletne") ? "none" : "block";
     }
 
     toggleKrilnaKapija();
     updateMeasureLabels();
     updateSystemVjesanja();
     updateKliznaMjere();
+    toggleRoletneFields();
   }
 
 function makeReport(){
+  if(isRoletne()){
+    return `ALUROL MJERENJE
+
+Datum mjerenja: ${val("datum")}
+Radnik: ${val("radnik")}
+
+KUPAC:
+Kupac/firma: ${val("kupac")}
+Telefon: ${val("telefon")}
+Mjesto: ${val("mjesto")}
+Adresa: ${val("adresa")}
+
+PROIZVOD:
+Tip proizvoda: ${val("tip")}
+
+${roletneReportText(false)}
+
+NAPOMENA:
+${val("napomena")}
+
+FOTOGRAFIJE:
+Sačuvano uz obrazac: ${photos.length} ${photos.length === 1 ? "slika" : "slika"}.
+Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod poruke.`;
+  }
+
   const kapija = isKliznaOrKrilnaKapija();
 
   const proizvodExtra = kapija
@@ -803,6 +1311,14 @@ Sačuvano uz obrazac: ${photos.length} ${photos.length === 1 ? "slika" : "slika"
 Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod poruke.`;
   }
   function requiredOk(){
+    if(isRoletne()){
+      if(!val("kupac") || !val("telefon") || roletneItems.length === 0){
+        alert("Popuni obavezno kupca i telefon i unesi najmanje jednu roletnu.");
+        return false;
+      }
+      return true;
+    }
+
     if(!val("kupac") || !val("telefon") || !val("sirina") || (!isKliznaKapija() && !val("visina"))){
       if(isKliznaKapija()) alert("Popuni obavezno: kupac, telefon i dužina kapije.");
       else if(isKrilnaKapija()) alert("Popuni obavezno: kupac, telefon, širina lijevog krila i širina desnog krila.");
@@ -916,8 +1432,34 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
     a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
+  function saveRoletneMeasurement(){
+    saveDraft(false);
+
+    const status = el("roletneSaveStatus");
+    const btn = el("roletneSaveBtn");
+
+    if(status){
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      status.textContent = `✓ Mjerenje je sačuvano u ${hh}:${mm}.`;
+      status.style.display = "block";
+    }
+
+    if(btn){
+      const original = "SAČUVAJ MJERENJE";
+      btn.textContent = "SAČUVANO ✓";
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.disabled = false;
+      }, 1600);
+    }
+  }
+
   function saveDraft(showMessage = true){
     const data = { photos };
+    data.roletneState = getRoletneState();
     ids.forEach(id => { const node = el(id); if(!node) return; data[id] = node.type === "checkbox" ? node.checked : node.value; });
     try{
       localStorage.setItem(draftKey, JSON.stringify(data));
@@ -932,6 +1474,7 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
       const data = JSON.parse(raw);
       ids.forEach(id => { const node = el(id); if(!node || data[id] === undefined) return; if(node.type === "checkbox") node.checked = !!data[id]; else node.value = data[id]; });
       photos = Array.isArray(data.photos) ? data.photos : [];
+      if(data.roletneState) setRoletneState(data.roletneState);
       renderPhotos();
     }catch(e){}
   }
@@ -940,6 +1483,7 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
     el("measurementForm").reset();
     localStorage.removeItem(draftKey);
     photos = [];
+    resetRoletneState();
     renderPhotos();
     el("output").style.display = "none";
     setToday(); setDefaultWorker();
@@ -948,7 +1492,14 @@ Za obradu naloga koristi fajl “obrazac + slike” ili slike pošalji ispod por
   function setDefaultWorker(){ const r = el("radnik"); if(r && !r.value) r.value = "Mijatović Draško"; }
   const tipSelect = el("tip");
   if(tipSelect) tipSelect.addEventListener("change", updateConditionalFields);
-  setToday(); setDefaultWorker(); updateConditionalFields();
+
+  const roletnaPodjelaSelect = el("roletnaPodjela");
+  if(roletnaPodjelaSelect) roletnaPodjelaSelect.addEventListener("change", renderRoletnaDijelovi);
+
+  const roletnaUkupnaSirinaInput = el("roletnaUkupnaSirina");
+  if(roletnaUkupnaSirinaInput) roletnaUkupnaSirinaInput.addEventListener("input", updateAutoRoletnaWidth);
+
+  setToday(); setDefaultWorker(); renderRoletnaDijelovi(); updateConditionalFields();
 </script>
 </body>
 </html>
